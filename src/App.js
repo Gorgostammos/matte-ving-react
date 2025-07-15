@@ -60,6 +60,7 @@ export default function App() {
   const [hurra, setHurra] = useState("");
   const [disabled, setDisabled] = useState(false);
   const [sluttMelding, setSluttMelding] = useState("");
+  const [hearts, setHearts] = useState(5);
   const inputRefs = useRef([]);
 
   function streakPoeng(nyPoeng) {
@@ -77,9 +78,10 @@ export default function App() {
   }
 
   function sjekkSvar() {
-    if (disabled) return;
+    if (disabled || hearts === 0) return;
 
     let riktige = 0;
+    let noenFeil = false;
     let nyeTilbakemeldinger = [...tilbakemeldinger];
     let nyPoeng = poeng;
     oppgaver.forEach((oppgave, i) => {
@@ -92,8 +94,16 @@ export default function App() {
         riktige++;
       } else {
         nyeTilbakemeldinger[i] = `❌ Feil. Riktig svar er ${oppgave.fasit}.`;
+        noenFeil = true;
       }
     });
+
+    // Hvis noen feil i runden: trekk ett hjerte (ikke mer enn én per runde)
+    let nyeHjerter = hearts;
+    if (noenFeil) {
+      nyeHjerter = Math.max(hearts - 1, 0);
+      setHearts(nyeHjerter);
+    }
 
     setTilbakemeldinger(nyeTilbakemeldinger);
     setPoeng(nyPoeng);
@@ -102,6 +112,14 @@ export default function App() {
       `Du fikk ${riktige} av ${oppgaver.length} riktige.`
     );
 
+    // GAME OVER
+    if (nyeHjerter === 0) {
+      setDisabled(true);
+      setSluttMelding("😵 Game over! Du mistet alle hjertene.");
+      return;
+    }
+
+    // Ny runde etter 2.3 sekunder hvis fortsatt liv igjen
     setTimeout(() => {
       setOppgaver(getInitialTasks());
       setInput(Array(5).fill(""));
@@ -126,6 +144,7 @@ export default function App() {
     setRundeTilbakemelding("");
     setSluttMelding("");
     setHurra("");
+    setHearts(2);
     setDisabled(false);
     if (inputRefs.current[0]) inputRefs.current[0].focus();
   }
@@ -136,6 +155,9 @@ export default function App() {
       <p style={{ fontWeight: "bold", color: "purple" }}>
         Høyeste poengsum: {highscore}
       </p>
+      <div style={{ fontSize: "2rem", margin: "15px" }}>
+        {Array(Math.max(hearts, 0)).fill("❤️").join(" ")}
+      </div>
       <p id="hurra" style={{ color: "blue", transition: "all 0.5s" }}>
         {hurra && "🎉"} {hurra}
       </p>

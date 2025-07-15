@@ -17,13 +17,15 @@ export default function MathTask({
       <section>
         <label htmlFor={inputId}>Svar her:</label>
         <input
-          type="number"
+          type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
           id={inputId}
           disabled={disabled}
           ref={inputRef}
           value={value}
           onChange={onChange}
-          onKeyDown={onKeyDown}
+          onKeyDown={onKeyDown}  
         />
       </section>
       <section className="tilbakemeldinger">
