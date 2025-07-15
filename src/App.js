@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import MathTask from "./MathTask";
+import Modal from "./Modal";
 import "./App.css";
 
 function genererTall() {
@@ -61,6 +62,7 @@ export default function App() {
   const [disabled, setDisabled] = useState(false);
   const [sluttMelding, setSluttMelding] = useState("");
   const [hearts, setHearts] = useState(5);
+  const [showModal, setShowModal] = useState(false);
   const inputRefs = useRef([]);
 
   function streakPoeng(nyPoeng) {
@@ -116,6 +118,7 @@ export default function App() {
     if (nyeHjerter === 0) {
       setDisabled(true);
       setSluttMelding("😵 Game over! Du mistet alle hjertene.");
+      setShowModal(true); // <- Vis modal!
       return;
     }
 
@@ -146,6 +149,7 @@ export default function App() {
     setHurra("");
     setHearts(2);
     setDisabled(false);
+    setShowModal(false);
     if (inputRefs.current[0]) inputRefs.current[0].focus();
   }
 
@@ -215,11 +219,31 @@ export default function App() {
       </section>
       <p id="sluttMelding">{sluttMelding}</p>
       <p id="rundeTilbakemelding">{rundeTilbakemelding}</p>
-      {disabled && (
+      {disabled && !showModal && (
         <button style={{ marginTop: 20, fontSize: 20 }} onClick={startPaaNytt}>
           Start på nytt
         </button>
       )}
+
+      <Modal open={showModal} onClose={() => {}}>
+        <h2>😵 Game Over!</h2>
+        <p>Du mistet alle hjertene.</p>
+        <p style={{ fontWeight: "bold", color: "purple" }}>
+          Poeng: {poeng}<br />
+          Highscore: {highscore}
+        </p>
+        <button
+          style={{
+            marginTop: 20, fontSize: 18, borderRadius: 8, padding: "8px 22px", background: "green", color: "white", border: "none"
+          }}
+          onClick={() => {
+            startPaaNytt();
+            setShowModal(false);
+          }}
+        >
+          Prøv igjen
+        </button>
+      </Modal>
     </div>
   );
 }
