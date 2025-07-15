@@ -122,16 +122,18 @@ export default function App() {
 
   function sjekkSvar() {
     if (disabled || hearts === 0) return;
-
+  
     let riktige = 0;
     let noenFeil = false;
     let nyeTilbakemeldinger = [...tilbakemeldinger];
     let nyPoeng = poeng;
+  
     oppgaver.forEach((oppgave, i) => {
-      const brukerSvar = Number(input[i]);
-      if (isNaN(brukerSvar)) {
+      const brukerSvar = input[i];
+      if (brukerSvar === "" || brukerSvar === null || typeof brukerSvar === "undefined") {
         nyeTilbakemeldinger[i] = "Skriv inn et tall.";
-      } else if (brukerSvar === oppgave.fasit) {
+        noenFeil = true;
+      } else if (Number(brukerSvar) === oppgave.fasit) {
         nyeTilbakemeldinger[i] = "✅ Riktig!";
         nyPoeng++;
         riktige++;
