@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import MathTask from "./MathTask";
 import "./App.css";
 
 function genererTall() {
@@ -6,7 +7,6 @@ function genererTall() {
 }
 
 function getInitialTasks() {
-  // Generer tall for hver oppgave
   const t1 = genererTall(), t2 = genererTall();
   const t3 = genererTall(), t4 = genererTall();
   const t5 = genererTall(), t6 = genererTall();
@@ -46,8 +46,13 @@ function getInitialTasks() {
   ];
 }
 
+function getSavedHighscore() {
+  return Number(localStorage.getItem("matteVingHighscore")) || 0;
+}
+
 export default function App() {
   const [poeng, setPoeng] = useState(0);
+  const [highscore, setHighscore] = useState(getSavedHighscore());
   const [oppgaver, setOppgaver] = useState(getInitialTasks());
   const [input, setInput] = useState(Array(5).fill(""));
   const [tilbakemeldinger, setTilbakemeldinger] = useState(Array(5).fill(""));
@@ -55,12 +60,13 @@ export default function App() {
   const [hurra, setHurra] = useState("");
   const [disabled, setDisabled] = useState(false);
   const [sluttMelding, setSluttMelding] = useState("");
-
-  // Fokus på første input etter runde
   const inputRefs = useRef([]);
 
-  // Streak Hurra
   function streakPoeng(nyPoeng) {
+    if (nyPoeng > highscore) {
+      setHighscore(nyPoeng);
+      localStorage.setItem("matteVingHighscore", nyPoeng);
+    }
     if (nyPoeng === 10) {
       setHurra("Hurra! Du klarte 10 poeng, bra jobbet! 🎉");
       setTimeout(() => setHurra(""), 3000);
@@ -70,7 +76,6 @@ export default function App() {
     }
   }
 
-  // Sjekk alle svar samtidig (som i JS-filen)
   function sjekkSvar() {
     if (disabled) return;
 
@@ -97,7 +102,6 @@ export default function App() {
       `Du fikk ${riktige} av ${oppgaver.length} riktige.`
     );
 
-    // Ny runde etter 2,3 sekunder
     setTimeout(() => {
       setOppgaver(getInitialTasks());
       setInput(Array(5).fill(""));
@@ -107,7 +111,6 @@ export default function App() {
     }, 2300);
   }
 
-  // Avslutt spill
   function avsluttSpill() {
     setSluttMelding(
       `🧠 Spillet er over! Du endte med totalt ${poeng} poeng. God innsats!`
@@ -115,11 +118,26 @@ export default function App() {
     setDisabled(true);
   }
 
+  function startPaaNytt() {
+    setPoeng(0);
+    setOppgaver(getInitialTasks());
+    setInput(Array(5).fill(""));
+    setTilbakemeldinger(Array(5).fill(""));
+    setRundeTilbakemelding("");
+    setSluttMelding("");
+    setHurra("");
+    setDisabled(false);
+    if (inputRefs.current[0]) inputRefs.current[0].focus();
+  }
+
   return (
     <div>
       <h1 id="Poeng">Poeng: {poeng}</h1>
-      <p id="hurra" style={{ color: "blue" }}>
-        {hurra}
+      <p style={{ fontWeight: "bold", color: "purple" }}>
+        Høyeste poengsum: {highscore}
+      </p>
+      <p id="hurra" style={{ color: "blue", transition: "all 0.5s" }}>
+        {hurra && "🎉"} {hurra}
       </p>
 
       <h2>Regn ut disse oppgavene: </h2>
@@ -129,30 +147,23 @@ export default function App() {
           <React.Fragment key={idx}>
             <h3>Oppgave {idx + 1}</h3>
             <article className="oppgaver">
-              <p id={`oppgave${idx === 0 ? "" : idx + 1}`}>{oppgave.tekst}</p>
-              <section>
-                <label htmlFor={oppgave.inputId}>Svar her:</label>
-                <input
-                  type="number"
-                  id={oppgave.inputId}
-                  disabled={disabled}
-                  ref={el => (inputRefs.current[idx] = el)}
-                  value={input[idx]}
-                  onChange={e => {
-                    const ny = [...input];
-                    ny[idx] = e.target.value;
-                    setInput(ny);
-                  }}
-                  onKeyDown={e => {
-                    if (e.key === "Enter" && idx === 4) sjekkSvar();
-                  }}
-                />
-              </section>
-              <section className="tilbakemeldinger">
-                <p id={oppgave.tilbakemeldingId}>
-                  {tilbakemeldinger[idx]}
-                </p>
-              </section>
+              <MathTask
+                tekst={oppgave.tekst}
+                inputId={oppgave.inputId}
+                value={input[idx]}
+                onChange={e => {
+                  const ny = [...input];
+                  ny[idx] = e.target.value;
+                  setInput(ny);
+                }}
+                disabled={disabled}
+                tilbakemelding={tilbakemeldinger[idx]}
+                tilbakemeldingId={oppgave.tilbakemeldingId}
+                inputRef={el => (inputRefs.current[idx] = el)}
+                onKeyDown={e => {
+                  if (e.key === "Enter" && idx === 4) sjekkSvar();
+                }}
+              />
             </article>
           </React.Fragment>
         ))}
@@ -182,6 +193,11 @@ export default function App() {
       </section>
       <p id="sluttMelding">{sluttMelding}</p>
       <p id="rundeTilbakemelding">{rundeTilbakemelding}</p>
+      {disabled && (
+        <button style={{ marginTop: 20, fontSize: 20 }} onClick={startPaaNytt}>
+          Start på nytt
+        </button>
+      )}
     </div>
   );
 }
