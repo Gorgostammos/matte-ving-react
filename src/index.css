@@ -1,13 +1,144 @@
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  font-size: larger;
+  margin-top: 50px;
+  background-color: whitesmoke;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+h1#Poeng {
+  display: block;
+  font-size: xx-large;
+  font-weight: bold;
+  background-color: black;
+  color: aliceblue;
+  width: 25%;
+  margin: auto;
+}
+
+article#main {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  margin-bottom: 20px;
+  border: 2px solid black;
+  width: 80%;
+  height: auto;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 50px;
+}
+
+h3 {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  margin: auto;
+  margin-top: 10px;
+  padding-top: 15px;
+  font-size: 36px;
+}
+
+
+article.oppgaver {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 20px;
+  padding: 70px;
+  border-bottom: 1px solid black;
+  font-size: 32px;
+
+}
+
+p {
+  font-size: 32px;
+  font-weight: bold;
+}
+
+p#tilbakemelding,
+#tilbakemelding1,
+#tilbakemelding2,
+#tilbakemelding3,
+#tilbakemelding4 {
+  padding-left: 5px;
+}
+
+/*dette fjerner pilene i input felte*/
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input {
+  height: 50px;
+  width: 80px;
+  font-weight: normal;
+  font-size: 32px;
+}
+
+section#knapper {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 65px;
+}
+
+button#sjekkSvar {
+  font-size: 35px;
+  background-color: greenyellow;
+  border-radius: 10px;
+  color: black;
+}
+
+button#avsluttSpill {
+  font-size: 35px;
+  background-color: red;
+  border-radius: 10px;
+  color: black;
+}
+
+@media only screen and (max-width: 600px) {
+  h1#Poeng {
+      width: 45%;
+  }
+
+  article#main {
+      width: 100%;
+      height: auto;
+  }
+
+  article.oppgaver {
+      display: grid;
+      justify-content: center;
+      border-bottom: 3px solid;
+      justify-items: center;
+      width: 100%;
+      margin: auto;
+      gap: 0px;
+      padding: 0px;
+  }
+
+  p {
+      font-size: xx-large;
+  }
+
+  section {
+      font-size: x-large;
+  }
+
+  h3 {
+      font-size: x-large;
+  }
+
+  input {
+      font-size: x-large;
+  }
+
+  button#sjekkSvar,
+  button#avsluttSpill {
+      font-size: 25px;
+      padding: 3px;
+  }
+
 }
