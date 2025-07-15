@@ -1,7 +1,39 @@
 import React, { useState, useRef } from "react";
 import MathTask from "./MathTask";
 import Modal from "./Modal";
+import confetti from "canvas-confetti";
 import "./App.css";
+
+// Konfetti-funksjon
+function triggerConfetti() {
+  const duration = 2.5 * 1000;
+  const animationEnd = Date.now() + duration;
+  const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1000 };
+
+  function randomInRange(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  const interval = setInterval(() => {
+    const timeLeft = animationEnd - Date.now();
+
+    if (timeLeft <= 0) {
+      return clearInterval(interval);
+    }
+
+    const particleCount = 50 * (timeLeft / duration);
+    confetti({
+      ...defaults,
+      particleCount,
+      origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+    });
+    confetti({
+      ...defaults,
+      particleCount,
+      origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+    });
+  }, 250);
+}
 
 function genererTall() {
   return Math.floor(Math.random() * 10) + 1;
@@ -58,24 +90,33 @@ export default function App() {
   const [input, setInput] = useState(Array(5).fill(""));
   const [tilbakemeldinger, setTilbakemeldinger] = useState(Array(5).fill(""));
   const [rundeTilbakemelding, setRundeTilbakemelding] = useState("");
-  const [hurra, setHurra] = useState("");
   const [disabled, setDisabled] = useState(false);
   const [sluttMelding, setSluttMelding] = useState("");
   const [hearts, setHearts] = useState(5);
   const [showModal, setShowModal] = useState(false);
+
+  // For Hurra-popup:
+  const [showHurraModal, setShowHurraModal] = useState(false);
+  const [hurraMessage, setHurraMessage] = useState("");
+
+  // For feiring av titall
+  const [lastCelebrated, setLastCelebrated] = useState(0);
+
   const inputRefs = useRef([]);
 
-  function streakPoeng(nyPoeng) {
+  // Feiring hver gang du passerer et nytt titall
+  function streakPoeng(nyPoeng, prevPoeng = lastCelebrated) {
     if (nyPoeng > highscore) {
       setHighscore(nyPoeng);
       localStorage.setItem("matteVingHighscore", nyPoeng);
     }
-    if (nyPoeng === 10) {
-      setHurra("Hurra! Du klarte 10 poeng, bra jobbet! 🎉");
-      setTimeout(() => setHurra(""), 3000);
-    } else if (nyPoeng === 20) {
-      setHurra("Hurra! Du klarte 20 poeng, bra jobbet! 🎉");
-      setTimeout(() => setHurra(""), 3000);
+    // Finn nærmeste titall du ikke har feiret
+    const nextCelebrate = Math.floor(prevPoeng / 10 + 1) * 10;
+    if (nyPoeng >= nextCelebrate && nextCelebrate > 0) {
+      setHurraMessage(`Hurra! Du klarte ${nextCelebrate} poeng, bra jobbet! 🎉`);
+      setShowHurraModal(true);
+      triggerConfetti();
+      setLastCelebrated(nextCelebrate);
     }
   }
 
@@ -109,7 +150,7 @@ export default function App() {
 
     setTilbakemeldinger(nyeTilbakemeldinger);
     setPoeng(nyPoeng);
-    streakPoeng(nyPoeng);
+    streakPoeng(nyPoeng, poeng); // pass på å sende med "forrige poeng"
     setRundeTilbakemelding(
       `Du fikk ${riktige} av ${oppgaver.length} riktige.`
     );
@@ -146,10 +187,11 @@ export default function App() {
     setTilbakemeldinger(Array(5).fill(""));
     setRundeTilbakemelding("");
     setSluttMelding("");
-    setHurra("");
-    setHearts(2);
+    setHearts(5);
     setDisabled(false);
     setShowModal(false);
+    setShowHurraModal(false);
+    setLastCelebrated(0);
     if (inputRefs.current[0]) inputRefs.current[0].focus();
   }
 
@@ -162,9 +204,6 @@ export default function App() {
       <div style={{ fontSize: "2rem", margin: "15px" }}>
         {Array(Math.max(hearts, 0)).fill("❤️").join(" ")}
       </div>
-      <p id="hurra" style={{ color: "blue", transition: "all 0.5s" }}>
-        {hurra && "🎉"} {hurra}
-      </p>
 
       <h2>Regn ut disse oppgavene: </h2>
 
@@ -225,6 +264,21 @@ export default function App() {
         </button>
       )}
 
+      {/* Hurra! - popup */}
+      <Modal open={showHurraModal} onClose={() => setShowHurraModal(false)}>
+        <h2 style={{ color: "green" }}>🎉 Gratulerer! 🎉</h2>
+        <p>{hurraMessage}</p>
+        <button
+          style={{
+            marginTop: 20, fontSize: 18, borderRadius: 8, padding: "8px 22px", background: "blue", color: "white", border: "none"
+          }}
+          onClick={() => setShowHurraModal(false)}
+        >
+          Fortsett
+        </button>
+      </Modal>
+
+      {/* Game over - popup */}
       <Modal open={showModal} onClose={() => {}}>
         <h2>😵 Game Over!</h2>
         <p>Du mistet alle hjertene.</p>
