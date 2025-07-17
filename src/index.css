@@ -1,3 +1,4 @@
+/* === Global stilsetting === */
 body {
   text-align: center;
   font-size: larger;
@@ -7,6 +8,7 @@ body {
   padding: 0 3vw;
 }
 
+/* Topptekst – poengscore */
 h1#Poeng {
   display: block;
   font-size: xx-large;
@@ -22,54 +24,22 @@ h1#Poeng {
   padding: 18px 0;
 }
 
-article#main {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  margin-bottom: 20px;
-  border: 2px solid #ebebeb;
-  width: 9 0%;
-  height: auto;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 32px;
-  border-radius: 20px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-  background: #fff;
-}
-
-h3 {
-  display: flex;
-  flex-direction: column;
-  align-content: center;
-  margin: auto;
-  margin-top: 10px;
-  padding-top: 15px;
-  padding-bottom: 15px;
-  font-size: 36px;
+/* Tekster */
+h3, p {
   color: #2b2d42;
 }
-
-article.oppgaver {
-  display: flex;
-  justify-content: center;
-  align-items: baseline;
-  gap: 20px;
-  padding: 40px 10vw;
-  border-bottom: 1px solid #efefef;
-  font-size: 32px;
-  border-radius: 14px;
-  background: #f5f7fa;
-  box-shadow: 0 2px 12px rgba(44,62,80,0.06);
-  margin-bottom: 18px;
+h3 {
+  font-size: 36px;
+  margin: auto;
+  margin-top: 10px;
+  padding: 15px 0;
 }
-
 p {
   font-size: 32px;
   font-weight: bold;
-  color: #2b2d42;
 }
 
+/* Tilbakemeldinger */
 p#tilbakemelding,
 #tilbakemelding1,
 #tilbakemelding2,
@@ -79,6 +49,7 @@ p#tilbakemelding,
   font-size: 20px;
 }
 
+/* Fjerne spinner fra input */
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
@@ -88,81 +59,7 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
-input {
-  height: 50px;
-  width: 90px;
-  font-weight: normal;
-  font-size: 32px;
-  justify-items: center;
-  border-radius: 10px;
-  border: 1.5px solid #c4c4c4;
-  outline: none;
-  transition: border 0.15s, box-shadow 0.18s;
-  box-shadow: 0 1.5px 6px rgba(100, 120, 160, 0.06);
-  padding: 0 14px;
-  background: #fafdff;
-}
-input:focus {
-  border: 2px solid #47e170;
-  box-shadow: 0 0 0 2px #b4fc7e77;
-}
-
-section#knapper {
-  display: flex;
-  justify-content: center;
-  align-items: baseline;
-  gap: 65px;
-  margin-top: 32px;
-  margin-bottom: 30px;
-}
-
-button#sjekkSvar, button#avsluttSpill {
-  font-size: 28px;
-  border-radius: 12px;
-  padding: 16px 38px;
-  border: none;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-  transition: background 0.2s, transform 0.1s;
-  font-family: inherit;
-  min-width: 120px;
-  min-height: 54px;
-  margin-bottom: 8px;
-}
-
-button#sjekkSvar {
-  background: linear-gradient(90deg, #47e170 0%, #b4fc7e 100%);
-  color: #222;
-}
-button#sjekkSvar:hover {
-  background: linear-gradient(90deg, #43d856 0%, #eaffd5 100%);
-  transform: translateY(-2px) scale(1.03);
-}
-
-button#avsluttSpill {
-  background: linear-gradient(90deg, #ff6161 0%, #ffbaba 100%);
-  color: #222;
-}
-button#avsluttSpill:hover {
-  background: linear-gradient(90deg, #ff3232 0%, #fff0f0 100%);
-  transform: translateY(-2px) scale(1.03);
-}
-
-
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.15); }
-  100% { transform: scale(1); }
-}
-
-.heart {
-  display: inline-block;
-  margin: 0 4px;
-}
-
-.pulse-heart {
-  animation: pulse 1.2s infinite ease-in-out;
-}
-
+/* === Mobilrespons === */
 @media only screen and (max-width: 600px) {
   body {
     font-size: 18px;
@@ -188,76 +85,5 @@ button#avsluttSpill:hover {
     margin: 8px auto 14px auto;
     border-radius: 13px;
     box-shadow: 0 2px 8px rgba(44,62,80,0.08);
-  }
-
-  article#main {
-    width: 98vw;
-    max-width: 98vw;
-    min-width: 0;
-    margin-top: 6px;
-    margin-bottom: 10px;
-    border-radius: 12px;
-    padding: 0 0 8px 0;
-    box-shadow: 0 2px 10px rgba(44,62,80,0.06);
-    border: 1px solid #eaeaea;
-    background: #fff;
-  }
-
-  article.oppgaver {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-bottom: 1px solid #e8e8e8;
-    width: 92vw;
-    max-width: 96vw;
-    margin: 8px auto;
-    gap: 10px;
-    padding: 10px 0 18px 0;
-    box-shadow: none;
-    border-radius: 8px;
-    background: #f7fafd;
-    font-size: 18px;
-  }
-
-  h3 {
-    font-size: 18px;
-    margin: 0 0 8px 0;
-    padding: 0;
-  }
-
-  p {
-    font-size: 18px;
-    margin: 0 0 8px 0;
-  }
-
-  input {
-    font-size: 18px;
-    width: 70vw;
-    max-width: 150px;
-    height: 42px;
-    margin: 3px 0 7px 0;
-    border-radius: 9px;
-    padding: 0 10px;
-    border: 1.2px solid #bcdfff;
-  }
-
-  section#knapper {
-    flex-direction: column;
-    gap: 8px;
-    margin-top: 8px;
-    margin-bottom: 8px;
-    width: 96vw;
-    max-width: 99vw;
-  }
-
-  button#sjekkSvar,
-  button#avsluttSpill {
-    font-size: 19px;
-    padding: 12px 0;
-    min-width: 94vw;
-    max-width: 99vw;
-    min-height: 44px;
-    border-radius: 10px;
-    margin-bottom: 6px;
   }
 }
