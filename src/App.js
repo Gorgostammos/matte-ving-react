@@ -40,10 +40,14 @@ function genererTall() {
 }
 
 function getInitialTasks() {
-  const t1 = genererTall(), t2 = genererTall();
-  const t3 = genererTall(), t4 = genererTall();
-  const t5 = genererTall(), t6 = genererTall();
-  const t7 = genererTall(), t8 = genererTall();
+  const t1 = genererTall(),
+    t2 = genererTall();
+  const t3 = genererTall(),
+    t4 = genererTall();
+  const t5 = genererTall(),
+    t6 = genererTall();
+  const t7 = genererTall(),
+    t8 = genererTall();
 
   return [
     {
@@ -113,7 +117,9 @@ export default function App() {
     // Finn nærmeste titall du ikke har feiret
     const nextCelebrate = Math.floor(prevPoeng / 10 + 1) * 10;
     if (nyPoeng >= nextCelebrate && nextCelebrate > 0) {
-      setHurraMessage(`Hurra! Du klarte ${nextCelebrate} poeng, bra jobbet! 🎉`);
+      setHurraMessage(
+        `Hurra! Du klarte ${nextCelebrate} poeng, bra jobbet! 🎉`
+      );
       setShowHurraModal(true);
       triggerConfetti();
       setLastCelebrated(nextCelebrate);
@@ -122,15 +128,19 @@ export default function App() {
 
   function sjekkSvar() {
     if (disabled || hearts === 0) return;
-  
+
     let riktige = 0;
     let noenFeil = false;
     let nyeTilbakemeldinger = [...tilbakemeldinger];
     let nyPoeng = poeng;
-  
+
     oppgaver.forEach((oppgave, i) => {
       const brukerSvar = input[i];
-      if (brukerSvar === "" || brukerSvar === null || typeof brukerSvar === "undefined") {
+      if (
+        brukerSvar === "" ||
+        brukerSvar === null ||
+        typeof brukerSvar === "undefined"
+      ) {
         nyeTilbakemeldinger[i] = "Skriv inn et tall.";
         noenFeil = true;
       } else if (Number(brukerSvar) === oppgave.fasit) {
@@ -153,16 +163,22 @@ export default function App() {
     setTilbakemeldinger(nyeTilbakemeldinger);
     setPoeng(nyPoeng);
     streakPoeng(nyPoeng, poeng); // pass på å sende med "forrige poeng"
-    setRundeTilbakemelding(
-      `Du fikk ${riktige} av ${oppgaver.length} riktige.`
-    );
+    setRundeTilbakemelding(`Du fikk ${riktige} av ${oppgaver.length} riktige.`);
 
     // GAME OVER
     if (nyeHjerter === 0) {
       setDisabled(true);
       setSluttMelding("😵 Game over! Du mistet alle hjertene.");
-      setShowModal(true); // <- Vis modal!
+      setShowModal(true);
       return;
+    }
+
+    if (riktige === 5 && hearts <= 2 && hearts < 5) {
+      nyeHjerter = hearts + 1;
+      setHearts(nyeHjerter);
+      setHurraMessage("🎉 Perfekt runde! Du vant tilbake ett hjerte! ❤️");
+      setShowHurraModal(true);
+      triggerConfetti();
     }
 
     // Ny runde etter 2.3 sekunder hvis fortsatt liv igjen
@@ -172,7 +188,7 @@ export default function App() {
       setTilbakemeldinger(Array(5).fill(""));
       setRundeTilbakemelding("");
       if (inputRefs.current[0]) inputRefs.current[0].focus();
-    }, 2300);
+    }, 10000);
   }
 
   function avsluttSpill() {
@@ -204,7 +220,18 @@ export default function App() {
         Høyeste poengsum: {highscore}
       </p>
       <div style={{ fontSize: "2rem", margin: "15px" }}>
-        {Array(Math.max(hearts, 0)).fill("❤️").join(" ")}
+        <div style={{ fontSize: "2rem", margin: "15px" }}>
+          {Array(Math.max(hearts, 0))
+            .fill(null)
+            .map((_, index) => (
+              <span
+                key={index}
+                className={`heart ${hearts <= 2 ? "pulse-heart" : ""}`}
+              >
+                ❤️
+              </span>
+            ))}
+        </div>
       </div>
 
       <h2>Regn ut disse oppgavene: </h2>
@@ -218,7 +245,7 @@ export default function App() {
                 tekst={oppgave.tekst}
                 inputId={oppgave.inputId}
                 value={input[idx]}
-                onChange={e => {
+                onChange={(e) => {
                   const ny = [...input];
                   ny[idx] = e.target.value;
                   setInput(ny);
@@ -226,8 +253,8 @@ export default function App() {
                 disabled={disabled}
                 tilbakemelding={tilbakemeldinger[idx]}
                 tilbakemeldingId={oppgave.tilbakemeldingId}
-                inputRef={el => (inputRefs.current[idx] = el)}
-                onKeyDown={e => {
+                inputRef={(el) => (inputRefs.current[idx] = el)}
+                onKeyDown={(e) => {
                   if (e.key === "Enter" && idx === 4) sjekkSvar();
                 }}
               />
@@ -272,7 +299,13 @@ export default function App() {
         <p>{hurraMessage}</p>
         <button
           style={{
-            marginTop: 20, fontSize: 18, borderRadius: 8, padding: "8px 22px", background: "blue", color: "white", border: "none"
+            marginTop: 20,
+            fontSize: 18,
+            borderRadius: 8,
+            padding: "8px 22px",
+            background: "blue",
+            color: "white",
+            border: "none",
           }}
           onClick={() => setShowHurraModal(false)}
         >
@@ -285,12 +318,19 @@ export default function App() {
         <h2>😵 Game Over!</h2>
         <p>Du mistet alle hjertene.</p>
         <p style={{ fontWeight: "bold", color: "purple" }}>
-          Poeng: {poeng}<br />
+          Poeng: {poeng}
+          <br />
           Highscore: {highscore}
         </p>
         <button
           style={{
-            marginTop: 20, fontSize: 18, borderRadius: 8, padding: "8px 22px", background: "green", color: "white", border: "none"
+            marginTop: 20,
+            fontSize: 18,
+            borderRadius: 8,
+            padding: "8px 22px",
+            background: "green",
+            color: "white",
+            border: "none",
           }}
           onClick={() => {
             startPaaNytt();

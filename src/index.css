@@ -75,7 +75,6 @@ p#tilbakemelding,
 #tilbakemelding2,
 #tilbakemelding3,
 #tilbakemelding4 {
-  padding-left: 10px;
   font-weight: normal;
   font-size: 20px;
 }
@@ -146,6 +145,22 @@ button#avsluttSpill {
 button#avsluttSpill:hover {
   background: linear-gradient(90deg, #ff3232 0%, #fff0f0 100%);
   transform: translateY(-2px) scale(1.03);
+}
+
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+.heart {
+  display: inline-block;
+  margin: 0 4px;
+}
+
+.pulse-heart {
+  animation: pulse 1.2s infinite ease-in-out;
 }
 
 @media only screen and (max-width: 600px) {
