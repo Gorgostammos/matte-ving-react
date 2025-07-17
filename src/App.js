@@ -281,20 +281,19 @@ export default function App() {
       </Modal>
 
       <Modal open={showModal} onClose={() => {}}>
-        <h2>😵 Game Over!</h2>
-        <p>Du mistet alle hjertene.</p>
-        <p className="highscore">
-          Poeng: {poeng}
-          <br />
-          Highscore: {highscore}
-        </p>
-        <button className="modal-button" onClick={() => {
-          startPaaNytt();
-          setShowModal(false);
-        }}>
-          Prøv igjen
-        </button>
-      </Modal>
+  <h2 className="modal-title gameover-title">😵 Game Over!</h2>
+  <p className="modal-subtitle">Du mistet alle hjertene.</p>
+  <p className="modal-score">
+    <span className="score">Poeng: {poeng}</span><br />
+    <span className="highscore">Highscore: {highscore}</span>
+  </p>
+  <button className="modal-button green-button" onClick={() => {
+    startPaaNytt();
+    setShowModal(false);
+  }}>
+    Prøv igjen
+  </button>
+</Modal>
     </div>
   );
 }

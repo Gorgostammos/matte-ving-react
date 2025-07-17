@@ -155,6 +155,61 @@ button#avsluttSpill:hover {
   transform: scale(1.05);
 }
 
+.modal-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.modal-subtitle {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.modal-score {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.modal-score .score {
+  color: #5a00b3;
+}
+
+.modal-score .highscore {
+  color: #b300b3;
+}
+
+.modal-button {
+  margin-top: 20px;
+  font-size: 18px;
+  border-radius: 8px;
+  padding: 10px 26px;
+  background: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.modal-button:hover {
+  transform: scale(1.05);
+}
+
+/* Grønne knappen i Game Over */
+.green-button {
+  background: linear-gradient(90deg, #43d856 0%, #b4fc7e 100%);
+  color: #111;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.green-button:hover {
+  background: linear-gradient(90deg, #28a745 0%, #a5ffb3 100%);
+  transform: scale(1.06);
+}
+
+
 @media only screen and (max-width: 600px) {
   article#main {
     width: 98vw;
