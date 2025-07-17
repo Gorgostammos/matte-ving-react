@@ -1,38 +1,210 @@
+/* === App.css === */
 .App {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.highscore {
+  font-weight: bold;
+  color: purple;
+  font-size: 1.5rem;
+  margin-top: -10px;
+  margin-bottom: 20px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.hearts-wrapper {
+  font-size: 2rem;
+  margin: 15px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.heart {
+  display: inline-block;
+  margin: 0 4px;
+}
+
+.pulse-heart {
+  animation: pulse 1.2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+article#main {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  margin: 32px auto 20px auto;
+  border: 2px solid #ebebeb;
+  width: 90%;
+  border-radius: 20px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  background: #fff;
+}
+
+article.oppgaver {
+  display: flex;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  align-items: baseline;
+  gap: 20px;
+  padding: 40px 10vw;
+  border-bottom: 1px solid #efefef;
+  font-size: 32px;
+  border-radius: 14px;
+  background: #f5f7fa;
+  box-shadow: 0 2px 12px rgba(44,62,80,0.06);
+  margin-bottom: 18px;
+}
+
+input {
+  height: 50px;
+  width: 90px;
+  font-size: 32px;
+  border-radius: 10px;
+  border: 1.5px solid #c4c4c4;
+  outline: none;
+  transition: border 0.15s, box-shadow 0.18s;
+  box-shadow: 0 1.5px 6px rgba(100, 120, 160, 0.06);
+  padding: 0 14px;
+  background: #fafdff;
+}
+input:focus {
+  border: 2px solid #47e170;
+  box-shadow: 0 0 0 2px #b4fc7e77;
+}
+
+section#knapper {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 65px;
+  margin-top: 32px;
+  margin-bottom: 30px;
+}
+
+button#sjekkSvar,
+button#avsluttSpill {
+  font-size: 28px;
+  border-radius: 12px;
+  padding: 16px 38px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  transition: background 0.2s, transform 0.1s;
+  font-family: inherit;
+  min-width: 120px;
+  min-height: 54px;
+  margin-bottom: 8px;
+}
+
+button#sjekkSvar {
+  background: linear-gradient(90deg, #47e170 0%, #b4fc7e 100%);
+  color: #222;
+}
+
+button#sjekkSvar:hover {
+  background: linear-gradient(90deg, #43d856 0%, #eaffd5 100%);
+  transform: translateY(-2px) scale(1.03);
+}
+
+button#avsluttSpill {
+  background: linear-gradient(90deg, #ff6161 0%, #ffbaba 100%);
+  color: #222;
+}
+
+button#avsluttSpill:hover {
+  background: linear-gradient(90deg, #ff3232 0%, #fff0f0 100%);
+  transform: translateY(-2px) scale(1.03);
+}
+
+.disabled-button {
+  cursor: not-allowed;
+}
+
+.restart-button {
+  margin-top: 20px;
+  font-size: 20px;
+  padding: 10px 24px;
+  border-radius: 12px;
+  background: #4444ff;
   color: white;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+.restart-button:hover {
+  transform: scale(1.04);
 }
 
-.App-link {
-  color: #61dafb;
+.modal-title {
+  color: green;
+  font-size: 24px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.modal-button {
+  margin-top: 20px;
+  font-size: 18px;
+  border-radius: 8px;
+  padding: 8px 22px;
+  background: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+.modal-button:hover {
+  transform: scale(1.05);
+}
+
+@media only screen and (max-width: 600px) {
+  article#main {
+    width: 98vw;
+    max-width: 98vw;
+    margin-top: 6px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    padding-bottom: 8px;
+    box-shadow: 0 2px 10px rgba(44,62,80,0.06);
+    border: 1px solid #eaeaea;
+    background: #fff;
   }
-  to {
-    transform: rotate(360deg);
+
+  article.oppgaver {
+    flex-direction: column;
+    align-items: center;
+    width: 92vw;
+    margin: 8px auto;
+    gap: 10px;
+    padding: 10px 0 18px 0;
+    font-size: 18px;
+  }
+
+  input {
+    font-size: 18px;
+    width: 70vw;
+    max-width: 150px;
+    height: 42px;
+    margin: 3px 0 7px 0;
+    border-radius: 9px;
+    padding: 0 10px;
+    border: 1.2px solid #bcdfff;
+  }
+
+  section#knapper {
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    width: 96vw;
+  }
+
+  button#sjekkSvar,
+  button#avsluttSpill,
+  .restart-button {
+    font-size: 19px;
+    padding: 12px 0;
+    min-width: 94vw;
+    min-height: 44px;
+    border-radius: 10px;
+    margin-bottom: 6px;
   }
 }

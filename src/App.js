@@ -99,27 +99,19 @@ export default function App() {
   const [hearts, setHearts] = useState(5);
   const [showModal, setShowModal] = useState(false);
 
-  // For Hurra-popup:
   const [showHurraModal, setShowHurraModal] = useState(false);
   const [hurraMessage, setHurraMessage] = useState("");
-
-  // For feiring av titall
   const [lastCelebrated, setLastCelebrated] = useState(0);
-
   const inputRefs = useRef([]);
 
-  // Feiring hver gang du passerer et nytt titall
   function streakPoeng(nyPoeng, prevPoeng = lastCelebrated) {
     if (nyPoeng > highscore) {
       setHighscore(nyPoeng);
       localStorage.setItem("matteVingHighscore", nyPoeng);
     }
-    // Finn nærmeste titall du ikke har feiret
     const nextCelebrate = Math.floor(prevPoeng / 10 + 1) * 10;
     if (nyPoeng >= nextCelebrate && nextCelebrate > 0) {
-      setHurraMessage(
-        `Hurra! Du klarte ${nextCelebrate} poeng, bra jobbet! 🎉`
-      );
+      setHurraMessage(`Hurra! Du klarte ${nextCelebrate} poeng, bra jobbet! 🎉`);
       setShowHurraModal(true);
       triggerConfetti();
       setLastCelebrated(nextCelebrate);
@@ -136,11 +128,7 @@ export default function App() {
 
     oppgaver.forEach((oppgave, i) => {
       const brukerSvar = input[i];
-      if (
-        brukerSvar === "" ||
-        brukerSvar === null ||
-        typeof brukerSvar === "undefined"
-      ) {
+      if (brukerSvar === "" || brukerSvar === null || typeof brukerSvar === "undefined") {
         nyeTilbakemeldinger[i] = "Skriv inn et tall.";
         noenFeil = true;
       } else if (Number(brukerSvar) === oppgave.fasit) {
@@ -153,7 +141,6 @@ export default function App() {
       }
     });
 
-    // Hvis noen feil i runden: trekk ett hjerte (ikke mer enn én per runde)
     let nyeHjerter = hearts;
     if (noenFeil) {
       nyeHjerter = Math.max(hearts - 1, 0);
@@ -162,10 +149,9 @@ export default function App() {
 
     setTilbakemeldinger(nyeTilbakemeldinger);
     setPoeng(nyPoeng);
-    streakPoeng(nyPoeng, poeng); // pass på å sende med "forrige poeng"
+    streakPoeng(nyPoeng, poeng);
     setRundeTilbakemelding(`Du fikk ${riktige} av ${oppgaver.length} riktige.`);
 
-    // GAME OVER
     if (nyeHjerter === 0) {
       setDisabled(true);
       setSluttMelding("😵 Game over! Du mistet alle hjertene.");
@@ -181,7 +167,6 @@ export default function App() {
       triggerConfetti();
     }
 
-    // Ny runde etter 2.3 sekunder hvis fortsatt liv igjen
     setTimeout(() => {
       setOppgaver(getInitialTasks());
       setInput(Array(5).fill(""));
@@ -192,9 +177,7 @@ export default function App() {
   }
 
   function avsluttSpill() {
-    setSluttMelding(
-      `🧠 Spillet er over! Du endte med totalt ${poeng} poeng. God innsats!`
-    );
+    setSluttMelding(`🧠 Spillet er over! Du endte med totalt ${poeng} poeng. God innsats!`);
     setDisabled(true);
   }
 
@@ -216,22 +199,16 @@ export default function App() {
   return (
     <div>
       <h1 id="Poeng">Poeng: {poeng}</h1>
-      <p style={{ fontWeight: "bold", color: "purple" }}>
-        Høyeste poengsum: {highscore}
-      </p>
-      <div style={{ fontSize: "2rem", margin: "15px" }}>
-        <div style={{ fontSize: "2rem", margin: "15px" }}>
-          {Array(Math.max(hearts, 0))
-            .fill(null)
-            .map((_, index) => (
-              <span
-                key={index}
-                className={`heart ${hearts <= 2 ? "pulse-heart" : ""}`}
-              >
-                ❤️
-              </span>
-            ))}
-        </div>
+      <p className="highscore">Høyeste poengsum: {highscore}</p>
+      <div className="hearts-wrapper">
+        {Array(Math.max(hearts, 0)).fill(null).map((_, index) => (
+          <span
+            key={index}
+            className={`heart ${hearts <= 2 ? "pulse-heart" : ""}`}
+          >
+            ❤️
+          </span>
+        ))}
       </div>
 
       <h2>Regn ut disse oppgavene: </h2>
@@ -269,7 +246,7 @@ export default function App() {
             id="sjekkSvar"
             onClick={sjekkSvar}
             disabled={disabled}
-            style={{ cursor: disabled ? "not-allowed" : "pointer" }}
+            className={disabled ? "disabled-button" : ""}
           >
             Sjekk svar
           </button>
@@ -279,64 +256,42 @@ export default function App() {
             id="avsluttSpill"
             onClick={avsluttSpill}
             disabled={disabled}
-            style={{ cursor: disabled ? "not-allowed" : "pointer" }}
+            className={disabled ? "disabled-button" : ""}
           >
             Avslutt
           </button>
         </section>
       </section>
+
       <p id="sluttMelding">{sluttMelding}</p>
       <p id="rundeTilbakemelding">{rundeTilbakemelding}</p>
+
       {disabled && !showModal && (
-        <button style={{ marginTop: 20, fontSize: 20 }} onClick={startPaaNytt}>
+        <button className="restart-button" onClick={startPaaNytt}>
           Start på nytt
         </button>
       )}
 
-      {/* Hurra! - popup */}
       <Modal open={showHurraModal} onClose={() => setShowHurraModal(false)}>
-        <h2 style={{ color: "green" }}>🎉 Gratulerer! 🎉</h2>
+        <h2 className="modal-title">🎉 Gratulerer! 🎉</h2>
         <p>{hurraMessage}</p>
-        <button
-          style={{
-            marginTop: 20,
-            fontSize: 18,
-            borderRadius: 8,
-            padding: "8px 22px",
-            background: "blue",
-            color: "white",
-            border: "none",
-          }}
-          onClick={() => setShowHurraModal(false)}
-        >
+        <button className="modal-button" onClick={() => setShowHurraModal(false)}>
           Fortsett
         </button>
       </Modal>
 
-      {/* Game over - popup */}
       <Modal open={showModal} onClose={() => {}}>
         <h2>😵 Game Over!</h2>
         <p>Du mistet alle hjertene.</p>
-        <p style={{ fontWeight: "bold", color: "purple" }}>
+        <p className="highscore">
           Poeng: {poeng}
           <br />
           Highscore: {highscore}
         </p>
-        <button
-          style={{
-            marginTop: 20,
-            fontSize: 18,
-            borderRadius: 8,
-            padding: "8px 22px",
-            background: "green",
-            color: "white",
-            border: "none",
-          }}
-          onClick={() => {
-            startPaaNytt();
-            setShowModal(false);
-          }}
-        >
+        <button className="modal-button" onClick={() => {
+          startPaaNytt();
+          setShowModal(false);
+        }}>
           Prøv igjen
         </button>
       </Modal>
