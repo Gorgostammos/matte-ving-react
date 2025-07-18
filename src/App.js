@@ -1,8 +1,10 @@
-import React, { useState, useRef } from "react";
+// App.js
+import React, { useState, useRef, useEffect } from "react";
 import MathTask from "./MathTask";
 import Modal from "./Modal";
 import confetti from "canvas-confetti";
 import "./App.css";
+import "./theme.css"; // 👈 Importer dark/light theme CSS
 
 // Konfetti-funksjon
 function triggerConfetti() {
@@ -98,11 +100,21 @@ export default function App() {
   const [sluttMelding, setSluttMelding] = useState("");
   const [hearts, setHearts] = useState(5);
   const [showModal, setShowModal] = useState(false);
-
   const [showHurraModal, setShowHurraModal] = useState(false);
   const [hurraMessage, setHurraMessage] = useState("");
   const [lastCelebrated, setLastCelebrated] = useState(0);
   const inputRefs = useRef([]);
+
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  };
 
   function streakPoeng(nyPoeng, prevPoeng = lastCelebrated) {
     if (nyPoeng > highscore) {
@@ -198,17 +210,20 @@ export default function App() {
 
   return (
     <div>
+      <button onClick={toggleTheme} className="theme-toggle">
+        {theme === "light" ? "🌙 Mørk modus" : "☀️ Lys modus"}
+      </button>
+
       <h1 id="Poeng">Poeng: {poeng}</h1>
       <p className="highscore">Høyeste poengsum: {highscore}</p>
       <div className="hearts-wrapper">
-        {Array(Math.max(hearts, 0)).fill(null).map((_, index) => (
-          <span
-            key={index}
-            className={`heart ${hearts <= 2 ? "pulse-heart" : ""}`}
-          >
-            ❤️
-          </span>
-        ))}
+        {Array(Math.max(hearts, 0))
+          .fill(null)
+          .map((_, index) => (
+            <span key={index} className={`heart ${hearts <= 2 ? "pulse-heart" : ""}`}>
+              ❤️
+            </span>
+          ))}
       </div>
 
       <h2>Regn ut disse oppgavene: </h2>
@@ -242,22 +257,12 @@ export default function App() {
 
       <section id="knapper">
         <section id="sjekkSvar">
-          <button
-            id="sjekkSvar"
-            onClick={sjekkSvar}
-            disabled={disabled}
-            className={disabled ? "disabled-button" : ""}
-          >
+          <button id="sjekkSvar" onClick={sjekkSvar} disabled={disabled} className={disabled ? "disabled-button" : ""}>
             Sjekk svar
           </button>
         </section>
         <section id="avsluttSpill">
-          <button
-            id="avsluttSpill"
-            onClick={avsluttSpill}
-            disabled={disabled}
-            className={disabled ? "disabled-button" : ""}
-          >
+          <button id="avsluttSpill" onClick={avsluttSpill} disabled={disabled} className={disabled ? "disabled-button" : ""}>
             Avslutt
           </button>
         </section>
@@ -281,19 +286,23 @@ export default function App() {
       </Modal>
 
       <Modal open={showModal} onClose={() => {}}>
-  <h2 className="modal-title gameover-title">😵 Game Over!</h2>
-  <p className="modal-subtitle">Du mistet alle hjertene.</p>
-  <p className="modal-score">
-    <span className="score">Poeng: {poeng}</span><br />
-    <span className="highscore">Highscore: {highscore}</span>
-  </p>
-  <button className="modal-button green-button" onClick={() => {
-    startPaaNytt();
-    setShowModal(false);
-  }}>
-    Prøv igjen
-  </button>
-</Modal>
+        <h2 className="modal-title gameover-title">😵 Game Over!</h2>
+        <p className="modal-subtitle">Du mistet alle hjertene.</p>
+        <p className="modal-score">
+          <span className="score">Poeng: {poeng}</span>
+          <br />
+          <span className="highscore">Highscore: {highscore}</span>
+        </p>
+        <button
+          className="modal-button green-button"
+          onClick={() => {
+            startPaaNytt();
+            setShowModal(false);
+          }}
+        >
+          Prøv igjen
+        </button>
+      </Modal>
     </div>
   );
 }
