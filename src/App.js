@@ -214,10 +214,12 @@ export default function App() {
 
   return (
     <div className="main-wrapper">
-      <header>
-        <ThemeToggleSwitch theme={theme} toggleTheme={toggleTheme} />
-        <h1 id="Poeng">Poeng: {poeng}</h1>
-      </header>
+
+    <header>
+      <ThemeToggleSwitch theme={theme} toggleTheme={toggleTheme} />
+      <h1 id="Poeng">Poeng: {poeng}</h1>
+    </header>
+
       <div className="hearts-wrapper">
         {Array(Math.max(hearts, 0))
           .fill(null)
