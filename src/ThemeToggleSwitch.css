@@ -1,13 +1,10 @@
+
 .toggle-switch-wrapper {
   display: flex;
   align-items: center;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 999;
   gap: 14px;
+  margin-bottom: 18px;  /* Ny linje! Gir luft over innhold */
 }
-
 .toggle-label {
   color: #313145;
   font-size: 1.3rem;
@@ -107,4 +104,30 @@ input:checked + .slider .icon {
   /* override for solfarge i dark */
   color: #ffe06b;
   background: #333;
+}
+@media only screen and (max-width: 600px) {
+  .toggle-switch-wrapper {
+    justify-content: center;    /* Sentrer på små skjermer */
+    margin-bottom: 6px;
+    gap: 7px;
+    scale: 0.98;                /* Kan evt. skaleres litt ned */
+  }
+  .toggle-label {
+    font-size: 1rem;
+    padding: 2px 7px 2px 7px;
+  }
+  .switch {
+    width: 55px;
+    height: 33px;
+  }
+  .slider .icon {
+    width: 22px;
+    height: 22px;
+    font-size: 1.15rem;
+    top: 5px;
+    left: 5px;
+  }
+  input:checked + .slider .icon {
+    left: 26px;
+  }
 }
