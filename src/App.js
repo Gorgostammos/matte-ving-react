@@ -3,26 +3,21 @@ import MathTask from "./MathTask";
 import Modal from "./Modal";
 import confetti from "canvas-confetti";
 import "./App.css";
-import "./theme.css"; // 👈 Importer dark/light theme CSS
+import "./theme.css";
 import ThemeToggleSwitch from "./ThemeToggleSwitch";
 
-// Konfetti-funksjon
 function triggerConfetti() {
   const duration = 2.5 * 1000;
   const animationEnd = Date.now() + duration;
   const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1000 };
-
   function randomInRange(min, max) {
     return Math.random() * (max - min) + min;
   }
-
   const interval = setInterval(() => {
     const timeLeft = animationEnd - Date.now();
-
     if (timeLeft <= 0) {
       return clearInterval(interval);
     }
-
     const particleCount = 50 * (timeLeft / duration);
     confetti({
       ...defaults,
@@ -104,7 +99,6 @@ export default function App() {
   const [hurraMessage, setHurraMessage] = useState("");
   const [lastCelebrated, setLastCelebrated] = useState(0);
   const inputRefs = useRef([]);
-
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
 
   useEffect(() => {
@@ -134,6 +128,7 @@ export default function App() {
 
   function sjekkSvar() {
     if (disabled || hearts === 0) return;
+    setDisabled(true);
 
     let riktige = 0;
     let noenFeil = false;
@@ -159,7 +154,6 @@ export default function App() {
       }
     });
 
-    // === HER STARTER HJERTEMAGIEN ===
     let nyeHjerter = hearts;
     if (noenFeil) {
       nyeHjerter = Math.max(hearts - 1, 0);
@@ -172,7 +166,6 @@ export default function App() {
       }
     }
     setHearts(nyeHjerter);
-    // === HER SLUTTER HJERTEMAGIEN ===
 
     setTilbakemeldinger(nyeTilbakemeldinger);
     setPoeng(nyPoeng);
@@ -186,13 +179,15 @@ export default function App() {
       return;
     }
 
+    // Nullstill etter 10 sekunder for neste runde:
     setTimeout(() => {
       setOppgaver(getInitialTasks());
       setInput(Array(5).fill(""));
       setTilbakemeldinger(Array(5).fill(""));
       setRundeTilbakemelding("");
+      setDisabled(false);
       if (inputRefs.current[0]) inputRefs.current[0].focus();
-    }, 10000);
+    }, 17000);
   }
 
   function avsluttSpill() {
@@ -219,10 +214,12 @@ export default function App() {
 
   return (
     <div className="main-wrapper">
+
     <header>
       <ThemeToggleSwitch theme={theme} toggleTheme={toggleTheme} />
       <h1 id="Poeng">Poeng: {poeng}</h1>
     </header>
+
       <div className="hearts-wrapper">
         {Array(Math.max(hearts, 0))
           .fill(null)
@@ -291,12 +288,7 @@ export default function App() {
       <p id="sluttMelding">{sluttMelding}</p>
       <p id="rundeTilbakemelding">{rundeTilbakemelding}</p>
 
-      {disabled && !showModal && (
-        <button className="restart-button" onClick={startPaaNytt}>
-          Start på nytt
-        </button>
-      )}
-
+      {/* Modal for Hurra */}
       <Modal open={showHurraModal} onClose={() => setShowHurraModal(false)}>
         <h2 className="modal-title">🎉 Gratulerer! 🎉</h2>
         <p className="hurraMessage">{hurraMessage}</p>
@@ -308,6 +300,7 @@ export default function App() {
         </button>
       </Modal>
 
+      {/* Modal for Game Over */}
       <Modal open={showModal} onClose={() => {}}>
         <h2 className="modal-title gameover-title">😵 Game Over!</h2>
         <p className="modal-subtitle">Du mistet alle hjertene.</p>
