@@ -279,7 +279,7 @@ export default function App() {
 
       <Modal open={showHurraModal} onClose={() => setShowHurraModal(false)}>
         <h2 className="modal-title">🎉 Gratulerer! 🎉</h2>
-        <p>{hurraMessage}</p>
+        <p className="hurraMessage">{hurraMessage}</p>
         <button className="modal-button" onClick={() => setShowHurraModal(false)}>
           Fortsett
         </button>

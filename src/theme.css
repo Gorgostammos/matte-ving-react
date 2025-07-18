@@ -4,6 +4,7 @@
     --text-color: #2b2d42;
     --card-bg: #fff;
     --input-bg: #fafdff;
+    --highscore-color: purple;
   }
   
   [data-theme='dark'] {
@@ -11,7 +12,10 @@
     --text-color: #e6e6e6;
     --card-bg: #2e2e2e;
     --input-bg: #3a3a3a;
+    --highscore-color: #47e170;
   }
+
+  
   
   body {
     background-color: var(--background-color);
@@ -22,20 +26,46 @@
   article.oppgaver,
   input,
   h3,
-  p,
+  p#oppgave,
+  p#oppgave1,
+  p#oppgave2,
+  p#oppgave3,
+  p#oppgave4,
   .modal-title,
   .modal-subtitle,
-  .modal-score {
+  .modal-score, p#tilbakemelding, 
+  #tilbakemelding1, #tilbakemelding2, #tilbakemelding3, 
+  #tilbakemelding4,p#rundeTilbakemelding,
+  p#sluttMelding,p.hurraMessage{
     background-color: var(--card-bg) !important;
     color: var(--text-color) !important;
   }
+
+  
+  p.highscore {
+    color: var(--highscore-color) !important;
+    background-color: transparent !important;
+  }
+
+  .modal-content {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    padding: 2rem 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.18);
+    text-align: center;
+    min-width: 300px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+
   
   input {
     background-color: var(--input-bg) !important;
   }
   
   .theme-toggle {
-    position: fixed;
+    position: absolute;
     top: 10px;
     right: 10px;
     z-index: 999;
