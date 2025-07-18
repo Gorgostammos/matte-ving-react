@@ -134,12 +134,12 @@ export default function App() {
 
   function sjekkSvar() {
     if (disabled || hearts === 0) return;
-
+  
     let riktige = 0;
     let noenFeil = false;
     let nyeTilbakemeldinger = [...tilbakemeldinger];
     let nyPoeng = poeng;
-
+  
     oppgaver.forEach((oppgave, i) => {
       const brukerSvar = input[i];
       if (brukerSvar === "" || brukerSvar === null || typeof brukerSvar === "undefined") {
@@ -154,33 +154,34 @@ export default function App() {
         noenFeil = true;
       }
     });
-
+  
+    // === HER STARTER HJERTEMAGIEN ===
     let nyeHjerter = hearts;
     if (noenFeil) {
       nyeHjerter = Math.max(hearts - 1, 0);
-      setHearts(nyeHjerter);
+    } else if (riktige === 5 && hearts < 5) {
+      nyeHjerter = Math.min(hearts + 1, 5);
+      if (hearts <= 2) {
+        setHurraMessage("🎉 Perfekt runde! Du vant tilbake ett hjerte! ❤️");
+        setShowHurraModal(true);
+        triggerConfetti();
+      }
     }
-
+    setHearts(nyeHjerter);
+    // === HER SLUTTER HJERTEMAGIEN ===
+  
     setTilbakemeldinger(nyeTilbakemeldinger);
     setPoeng(nyPoeng);
     streakPoeng(nyPoeng, poeng);
     setRundeTilbakemelding(`Du fikk ${riktige} av ${oppgaver.length} riktige.`);
-
+  
     if (nyeHjerter === 0) {
       setDisabled(true);
       setSluttMelding("😵 Game over! Du mistet alle hjertene.");
       setShowModal(true);
       return;
     }
-
-    if (riktige === 5 && hearts <= 2 && hearts < 5) {
-      nyeHjerter = hearts + 1;
-      setHearts(nyeHjerter);
-      setHurraMessage("🎉 Perfekt runde! Du vant tilbake ett hjerte! ❤️");
-      setShowHurraModal(true);
-      triggerConfetti();
-    }
-
+  
     setTimeout(() => {
       setOppgaver(getInitialTasks());
       setInput(Array(5).fill(""));
@@ -189,6 +190,7 @@ export default function App() {
       if (inputRefs.current[0]) inputRefs.current[0].focus();
     }, 10000);
   }
+  
 
   function avsluttSpill() {
     setSluttMelding(`🧠 Spillet er over! Du endte med totalt ${poeng} poeng. God innsats!`);
