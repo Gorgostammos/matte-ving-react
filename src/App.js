@@ -1,8 +1,10 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import MathTask from "./MathTask";
 import Modal from "./Modal";
 import confetti from "canvas-confetti";
 import "./App.css";
+import "./theme.css"; // 👈 Importer dark/light theme CSS
+import ThemeToggleSwitch from "./ThemeToggleSwitch";
 
 // Konfetti-funksjon
 function triggerConfetti() {
@@ -98,11 +100,21 @@ export default function App() {
   const [sluttMelding, setSluttMelding] = useState("");
   const [hearts, setHearts] = useState(5);
   const [showModal, setShowModal] = useState(false);
-
   const [showHurraModal, setShowHurraModal] = useState(false);
   const [hurraMessage, setHurraMessage] = useState("");
   const [lastCelebrated, setLastCelebrated] = useState(0);
   const inputRefs = useRef([]);
+
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  };
 
   function streakPoeng(nyPoeng, prevPoeng = lastCelebrated) {
     if (nyPoeng > highscore) {
@@ -111,7 +123,9 @@ export default function App() {
     }
     const nextCelebrate = Math.floor(prevPoeng / 10 + 1) * 10;
     if (nyPoeng >= nextCelebrate && nextCelebrate > 0) {
-      setHurraMessage(`Hurra! Du klarte ${nextCelebrate} poeng, bra jobbet! 🎉`);
+      setHurraMessage(
+        `Hurra! Du klarte ${nextCelebrate} poeng, bra jobbet! 🎉`
+      );
       setShowHurraModal(true);
       triggerConfetti();
       setLastCelebrated(nextCelebrate);
@@ -128,7 +142,11 @@ export default function App() {
 
     oppgaver.forEach((oppgave, i) => {
       const brukerSvar = input[i];
-      if (brukerSvar === "" || brukerSvar === null || typeof brukerSvar === "undefined") {
+      if (
+        brukerSvar === "" ||
+        brukerSvar === null ||
+        typeof brukerSvar === "undefined"
+      ) {
         nyeTilbakemeldinger[i] = "Skriv inn et tall.";
         noenFeil = true;
       } else if (Number(brukerSvar) === oppgave.fasit) {
@@ -141,11 +159,20 @@ export default function App() {
       }
     });
 
+    // === HER STARTER HJERTEMAGIEN ===
     let nyeHjerter = hearts;
     if (noenFeil) {
       nyeHjerter = Math.max(hearts - 1, 0);
-      setHearts(nyeHjerter);
+    } else if (riktige === 5 && hearts < 5) {
+      nyeHjerter = Math.min(hearts + 1, 5);
+      if (hearts <= 2) {
+        setHurraMessage("🎉 Perfekt runde! Du vant tilbake ett hjerte! ❤️");
+        setShowHurraModal(true);
+        triggerConfetti();
+      }
     }
+    setHearts(nyeHjerter);
+    // === HER SLUTTER HJERTEMAGIEN ===
 
     setTilbakemeldinger(nyeTilbakemeldinger);
     setPoeng(nyPoeng);
@@ -159,14 +186,6 @@ export default function App() {
       return;
     }
 
-    if (riktige === 5 && hearts <= 2 && hearts < 5) {
-      nyeHjerter = hearts + 1;
-      setHearts(nyeHjerter);
-      setHurraMessage("🎉 Perfekt runde! Du vant tilbake ett hjerte! ❤️");
-      setShowHurraModal(true);
-      triggerConfetti();
-    }
-
     setTimeout(() => {
       setOppgaver(getInitialTasks());
       setInput(Array(5).fill(""));
@@ -177,7 +196,9 @@ export default function App() {
   }
 
   function avsluttSpill() {
-    setSluttMelding(`🧠 Spillet er over! Du endte med totalt ${poeng} poeng. God innsats!`);
+    setSluttMelding(
+      `🧠 Spillet er over! Du endte med totalt ${poeng} poeng. God innsats!`
+    );
     setDisabled(true);
   }
 
@@ -198,17 +219,21 @@ export default function App() {
 
   return (
     <div>
+      <ThemeToggleSwitch theme={theme} toggleTheme={toggleTheme} />
+
       <h1 id="Poeng">Poeng: {poeng}</h1>
       <p className="highscore">Høyeste poengsum: {highscore}</p>
       <div className="hearts-wrapper">
-        {Array(Math.max(hearts, 0)).fill(null).map((_, index) => (
-          <span
-            key={index}
-            className={`heart ${hearts <= 2 ? "pulse-heart" : ""}`}
-          >
-            ❤️
-          </span>
-        ))}
+        {Array(Math.max(hearts, 0))
+          .fill(null)
+          .map((_, index) => (
+            <span
+              key={index}
+              className={`heart ${hearts <= 2 ? "pulse-heart" : ""}`}
+            >
+              ❤️
+            </span>
+          ))}
       </div>
 
       <h2>Regn ut disse oppgavene: </h2>
@@ -274,26 +299,33 @@ export default function App() {
 
       <Modal open={showHurraModal} onClose={() => setShowHurraModal(false)}>
         <h2 className="modal-title">🎉 Gratulerer! 🎉</h2>
-        <p>{hurraMessage}</p>
-        <button className="modal-button" onClick={() => setShowHurraModal(false)}>
+        <p className="hurraMessage">{hurraMessage}</p>
+        <button
+          className="modal-button"
+          onClick={() => setShowHurraModal(false)}
+        >
           Fortsett
         </button>
       </Modal>
 
       <Modal open={showModal} onClose={() => {}}>
-  <h2 className="modal-title gameover-title">😵 Game Over!</h2>
-  <p className="modal-subtitle">Du mistet alle hjertene.</p>
-  <p className="modal-score">
-    <span className="score">Poeng: {poeng}</span><br />
-    <span className="highscore">Highscore: {highscore}</span>
-  </p>
-  <button className="modal-button green-button" onClick={() => {
-    startPaaNytt();
-    setShowModal(false);
-  }}>
-    Prøv igjen
-  </button>
-</Modal>
+        <h2 className="modal-title gameover-title">😵 Game Over!</h2>
+        <p className="modal-subtitle">Du mistet alle hjertene.</p>
+        <p className="modal-score">
+          <span className="score">Poeng: {poeng}</span>
+          <br />
+          <span className="highscore">Highscore: {highscore}</span>
+        </p>
+        <button
+          className="modal-button green-button"
+          onClick={() => {
+            startPaaNytt();
+            setShowModal(false);
+          }}
+        >
+          Prøv igjen
+        </button>
+      </Modal>
     </div>
   );
 }

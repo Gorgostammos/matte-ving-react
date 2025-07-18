@@ -6,7 +6,7 @@
 .highscore {
   font-weight: bold;
   color: purple;
-  font-size: 1.5rem;
+  font-size: 2.2rem;
   margin-top: -10px;
   margin-bottom: 20px;
 }
@@ -172,13 +172,15 @@ button#avsluttSpill:hover {
   margin-bottom: 20px;
 }
 
-.modal-score .score {
-  color: #5a00b3;
+.modal-score .highscore {
+  color: var(--highscore-color) !important;
 }
 
-.modal-score .highscore {
-  color: #b300b3;
+.modal-score .score {
+  color: var(--score-color);
 }
+
+
 
 .modal-button {
   margin-top: 20px;
