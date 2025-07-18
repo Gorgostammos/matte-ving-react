@@ -1,0 +1,110 @@
+.toggle-switch-wrapper {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 999;
+  gap: 14px;
+}
+
+.toggle-label {
+  color: #313145;
+  font-size: 1.3rem;
+  font-family: inherit;
+  font-weight: 700;
+  background: rgba(255,255,255,0.7);
+  border-radius: 9px;
+  padding: 3px 10px 3px 10px;
+  letter-spacing: 1px;
+  transition: color 0.22s, background 0.22s;
+  user-select: none;
+}
+.toggle-label.active {
+  background: #ffe06b;
+  color: #1e1e1e;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 76px;
+  height: 46px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  background-color: #ffe06b;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transition: background-color 0.4s;
+  border-radius: 40px;
+  box-shadow: 0 4px 24px #0002;
+  display: flex;
+  align-items: center;
+}
+
+.slider .icon {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-size: 1.8rem;
+  color: #ffe06b;
+  background: #1e1e1e;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: left 0.4s, background 0.4s, color 0.4s;
+  box-shadow: 0 1px 8px #8882;
+}
+
+/* Skyv ikonet til høyre ved "light" */
+input:checked + .slider .icon {
+  left: 38px;
+  color: #ffc300;
+  background: #fffde7;
+}
+
+/* Moon ikon style for dark theme */
+input:not(:checked) + .slider .icon {
+  left: 8px;
+  color: #ffe06b;
+  background: #232439;
+}
+
+input:checked + .slider {
+  background-color: #ffe06b;
+}
+input:not(:checked) + .slider {
+  background-color: #444b5a;
+}
+
+/* Farger for mørkt tema på hele komponenten */
+[data-theme="dark"] .slider {
+  background: #444b5a;
+}
+[data-theme="dark"] .toggle-label.active {
+  background: #444b5a;
+  color: #ffe06b;
+}
+[data-theme="dark"] .icon {
+  background: #1e1e1e !important;
+  color: #ffe06b !important;
+}
+input:checked + .slider .icon {
+  /* override for solfarge i dark */
+  color: #ffe06b;
+  background: #333;
+}

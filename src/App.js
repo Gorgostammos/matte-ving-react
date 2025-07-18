@@ -5,6 +5,8 @@ import Modal from "./Modal";
 import confetti from "canvas-confetti";
 import "./App.css";
 import "./theme.css"; // 👈 Importer dark/light theme CSS
+import ThemeToggleSwitch from "./ThemeToggleSwitch";
+
 
 // Konfetti-funksjon
 function triggerConfetti() {
@@ -210,9 +212,7 @@ export default function App() {
 
   return (
     <div>
-      <button onClick={toggleTheme} className="theme-toggle">
-        {theme === "light" ? "🌙 Mørk modus" : "☀️ Lys modus"}
-      </button>
+      <ThemeToggleSwitch theme={theme} toggleTheme={toggleTheme} />
 
       <h1 id="Poeng">Poeng: {poeng}</h1>
       <p className="highscore">Høyeste poengsum: {highscore}</p>
