@@ -6,6 +6,7 @@ import "./App.css";
 import "./theme.css";
 import ThemeToggleSwitch from "./ThemeToggleSwitch";
 
+// Konfetti-funksjon
 function triggerConfetti() {
   const duration = 2.5 * 1000;
   const animationEnd = Date.now() + duration;
@@ -98,7 +99,10 @@ export default function App() {
   const [showHurraModal, setShowHurraModal] = useState(false);
   const [hurraMessage, setHurraMessage] = useState("");
   const [lastCelebrated, setLastCelebrated] = useState(0);
+  const [venterPaNeste, setVenterPaNeste] = useState(false);
+  const nesteTimeoutRef = useRef(null);
   const inputRefs = useRef([]);
+
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
 
   useEffect(() => {
@@ -127,6 +131,12 @@ export default function App() {
   }
 
   function sjekkSvar() {
+    // Hvis vi venter på neste runde: gå videre nå!
+    if (venterPaNeste) {
+      nesteRunde();
+      return;
+    }
+
     if (disabled || hearts === 0) return;
     setDisabled(true);
 
@@ -176,18 +186,29 @@ export default function App() {
       setDisabled(true);
       setSluttMelding("😵 Game over! Du mistet alle hjertene.");
       setShowModal(true);
+      setVenterPaNeste(false);
       return;
     }
 
-    // Nullstill etter 10 sekunder for neste runde:
-    setTimeout(() => {
-      setOppgaver(getInitialTasks());
-      setInput(Array(5).fill(""));
-      setTilbakemeldinger(Array(5).fill(""));
-      setRundeTilbakemelding("");
-      setDisabled(false);
-      if (inputRefs.current[0]) inputRefs.current[0].focus();
-    }, 17000);
+    setVenterPaNeste(true);
+    setDisabled(false); // <-- Nå kan du trykke "Neste runde" med én gang!
+    nesteTimeoutRef.current = setTimeout(() => {
+      nesteRunde();
+    }, 17000); // 17 sekunder
+  }
+
+  function nesteRunde() {
+    setOppgaver(getInitialTasks());
+    setInput(Array(5).fill(""));
+    setTilbakemeldinger(Array(5).fill(""));
+    setRundeTilbakemelding("");
+    setDisabled(false);
+    setVenterPaNeste(false);
+    if (nesteTimeoutRef.current) {
+      clearTimeout(nesteTimeoutRef.current);
+      nesteTimeoutRef.current = null;
+    }
+    if (inputRefs.current[0]) inputRefs.current[0].focus();
   }
 
   function avsluttSpill() {
@@ -195,6 +216,11 @@ export default function App() {
       `🧠 Spillet er over! Du endte med totalt ${poeng} poeng. God innsats!`
     );
     setDisabled(true);
+    setVenterPaNeste(false);
+    if (nesteTimeoutRef.current) {
+      clearTimeout(nesteTimeoutRef.current);
+      nesteTimeoutRef.current = null;
+    }
   }
 
   function startPaaNytt() {
@@ -209,17 +235,20 @@ export default function App() {
     setShowModal(false);
     setShowHurraModal(false);
     setLastCelebrated(0);
+    setVenterPaNeste(false);
+    if (nesteTimeoutRef.current) {
+      clearTimeout(nesteTimeoutRef.current);
+      nesteTimeoutRef.current = null;
+    }
     if (inputRefs.current[0]) inputRefs.current[0].focus();
   }
 
   return (
     <div className="main-wrapper">
-
-    <header>
-      <ThemeToggleSwitch theme={theme} toggleTheme={toggleTheme} />
-      <h1 id="Poeng">Poeng: {poeng}</h1>
-    </header>
-
+      <header>
+        <ThemeToggleSwitch theme={theme} toggleTheme={toggleTheme} />
+        <h1 id="Poeng">Poeng: {poeng}</h1>
+      </header>
       <div className="hearts-wrapper">
         {Array(Math.max(hearts, 0))
           .fill(null)
@@ -268,9 +297,9 @@ export default function App() {
             id="sjekkSvar"
             onClick={sjekkSvar}
             disabled={disabled}
-            className={disabled ? "disabled-button" : ""}
+            className={venterPaNeste ? "neste-knapp" : disabled ? "disabled-button" : ""}
           >
-            Sjekk svar
+            {venterPaNeste ? "Neste runde" : "Sjekk svar"}
           </button>
         </section>
         <section id="avsluttSpill">
