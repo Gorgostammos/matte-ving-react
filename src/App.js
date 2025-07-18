@@ -1,4 +1,3 @@
-// App.js
 import React, { useState, useRef, useEffect } from "react";
 import MathTask from "./MathTask";
 import Modal from "./Modal";
@@ -6,7 +5,6 @@ import confetti from "canvas-confetti";
 import "./App.css";
 import "./theme.css"; // 👈 Importer dark/light theme CSS
 import ThemeToggleSwitch from "./ThemeToggleSwitch";
-
 
 // Konfetti-funksjon
 function triggerConfetti() {
@@ -125,7 +123,9 @@ export default function App() {
     }
     const nextCelebrate = Math.floor(prevPoeng / 10 + 1) * 10;
     if (nyPoeng >= nextCelebrate && nextCelebrate > 0) {
-      setHurraMessage(`Hurra! Du klarte ${nextCelebrate} poeng, bra jobbet! 🎉`);
+      setHurraMessage(
+        `Hurra! Du klarte ${nextCelebrate} poeng, bra jobbet! 🎉`
+      );
       setShowHurraModal(true);
       triggerConfetti();
       setLastCelebrated(nextCelebrate);
@@ -134,15 +134,19 @@ export default function App() {
 
   function sjekkSvar() {
     if (disabled || hearts === 0) return;
-  
+
     let riktige = 0;
     let noenFeil = false;
     let nyeTilbakemeldinger = [...tilbakemeldinger];
     let nyPoeng = poeng;
-  
+
     oppgaver.forEach((oppgave, i) => {
       const brukerSvar = input[i];
-      if (brukerSvar === "" || brukerSvar === null || typeof brukerSvar === "undefined") {
+      if (
+        brukerSvar === "" ||
+        brukerSvar === null ||
+        typeof brukerSvar === "undefined"
+      ) {
         nyeTilbakemeldinger[i] = "Skriv inn et tall.";
         noenFeil = true;
       } else if (Number(brukerSvar) === oppgave.fasit) {
@@ -154,7 +158,7 @@ export default function App() {
         noenFeil = true;
       }
     });
-  
+
     // === HER STARTER HJERTEMAGIEN ===
     let nyeHjerter = hearts;
     if (noenFeil) {
@@ -169,19 +173,19 @@ export default function App() {
     }
     setHearts(nyeHjerter);
     // === HER SLUTTER HJERTEMAGIEN ===
-  
+
     setTilbakemeldinger(nyeTilbakemeldinger);
     setPoeng(nyPoeng);
     streakPoeng(nyPoeng, poeng);
     setRundeTilbakemelding(`Du fikk ${riktige} av ${oppgaver.length} riktige.`);
-  
+
     if (nyeHjerter === 0) {
       setDisabled(true);
       setSluttMelding("😵 Game over! Du mistet alle hjertene.");
       setShowModal(true);
       return;
     }
-  
+
     setTimeout(() => {
       setOppgaver(getInitialTasks());
       setInput(Array(5).fill(""));
@@ -190,10 +194,11 @@ export default function App() {
       if (inputRefs.current[0]) inputRefs.current[0].focus();
     }, 10000);
   }
-  
 
   function avsluttSpill() {
-    setSluttMelding(`🧠 Spillet er over! Du endte med totalt ${poeng} poeng. God innsats!`);
+    setSluttMelding(
+      `🧠 Spillet er over! Du endte med totalt ${poeng} poeng. God innsats!`
+    );
     setDisabled(true);
   }
 
@@ -222,7 +227,10 @@ export default function App() {
         {Array(Math.max(hearts, 0))
           .fill(null)
           .map((_, index) => (
-            <span key={index} className={`heart ${hearts <= 2 ? "pulse-heart" : ""}`}>
+            <span
+              key={index}
+              className={`heart ${hearts <= 2 ? "pulse-heart" : ""}`}
+            >
               ❤️
             </span>
           ))}
@@ -259,12 +267,22 @@ export default function App() {
 
       <section id="knapper">
         <section id="sjekkSvar">
-          <button id="sjekkSvar" onClick={sjekkSvar} disabled={disabled} className={disabled ? "disabled-button" : ""}>
+          <button
+            id="sjekkSvar"
+            onClick={sjekkSvar}
+            disabled={disabled}
+            className={disabled ? "disabled-button" : ""}
+          >
             Sjekk svar
           </button>
         </section>
         <section id="avsluttSpill">
-          <button id="avsluttSpill" onClick={avsluttSpill} disabled={disabled} className={disabled ? "disabled-button" : ""}>
+          <button
+            id="avsluttSpill"
+            onClick={avsluttSpill}
+            disabled={disabled}
+            className={disabled ? "disabled-button" : ""}
+          >
             Avslutt
           </button>
         </section>
@@ -282,7 +300,10 @@ export default function App() {
       <Modal open={showHurraModal} onClose={() => setShowHurraModal(false)}>
         <h2 className="modal-title">🎉 Gratulerer! 🎉</h2>
         <p className="hurraMessage">{hurraMessage}</p>
-        <button className="modal-button" onClick={() => setShowHurraModal(false)}>
+        <button
+          className="modal-button"
+          onClick={() => setShowHurraModal(false)}
+        >
           Fortsett
         </button>
       </Modal>
