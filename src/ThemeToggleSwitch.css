@@ -1,9 +1,9 @@
-
 .toggle-switch-wrapper {
   display: flex;
   align-items: center;
   gap: 14px;
-  margin-bottom: 18px;  /* Ny linje! Gir luft over innhold */
+  margin-bottom: 18px;
+  flex-direction: row-reverse;
 }
 .toggle-label {
   color: #313145;
