@@ -3,7 +3,7 @@
   align-items: center;
   gap: 14px;
   margin-bottom: 18px;
-  flex-direction: row-reverse;
+  justify-content: flex-end;
 }
 .toggle-label {
   color: #313145;
