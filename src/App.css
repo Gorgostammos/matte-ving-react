@@ -1,4 +1,3 @@
-/* === App.css === */
 .App {
   text-align: center;
 }
@@ -83,7 +82,11 @@ section#knapper {
 }
 
 button#sjekkSvar,
-button#avsluttSpill {
+button#avsluttSpill, 
+button#tilbakeTilForside,
+button#lett,
+button#Middels,
+button#Vanskelig{
   font-size: 28px;
   border-radius: 12px;
   padding: 16px 38px;
@@ -94,6 +97,30 @@ button#avsluttSpill {
   min-width: 120px;
   min-height: 54px;
   margin-bottom: 8px;
+}
+
+.difficulty-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+}
+
+button#lett{
+  background: linear-gradient(90deg, #dc64f0 0%, #5cb7ff 100%);
+  color: #222;
+}
+
+button#Middels {background: linear-gradient(90deg, #5cb7ff 0%, #e1ee60 100%);
+color: #222;
+}
+button#Vanskelig{
+  background: linear-gradient(90deg, #e1ee60 0%, #E91E63 100%);
+  color: #222;
+}
+
+button#tilbakeTilForside {
+  background: linear-gradient(153deg, #dc64f0 0%, #5cb7ff 100%);
+  color: #222;
 }
 
 button#sjekkSvar {
@@ -234,6 +261,8 @@ button#avsluttSpill:hover {
     padding: 10px 0 18px 0;
     font-size: 18px;
   }
+
+
 
   input {
     font-size: 18px;
