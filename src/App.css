@@ -86,7 +86,13 @@ button#avsluttSpill,
 button#tilbakeTilForside,
 button#lett,
 button#Middels,
-button#Vanskelig{
+button#Vanskelig,
+button#multiply,
+button#minus,
+button#plus,
+button#mix,
+button#start
+{
   font-size: 28px;
   border-radius: 12px;
   padding: 16px 38px;
@@ -99,19 +105,65 @@ button#Vanskelig{
   margin-bottom: 8px;
 }
 
+/* ---- NYTT: Tydelig valgt/fokusert knapp ---- */
+button.active,
+button:focus-visible {
+  outline: 3px solid #222;
+  outline-offset: 2px;
+  filter: brightness(0.97) drop-shadow(0 2px 12px #b4fc7e99);
+  box-shadow: 0 0 0 3px #b4fc7e44;
+  transform: scale(1.05);
+  z-index: 2;
+}
+
+/* ------------------------------------------- */
+
 .difficulty-buttons {
   display: flex;
   justify-content: center;
   gap: 40px;
 }
 
+.operation-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  padding-bottom: 50px;
+}
+
+button#mix {
+  background: linear-gradient(90deg, #8BC34A 0%, #E91E63 100%);
+  color: #222;
+}
+
+button#plus {
+  background: linear-gradient(90deg, #FF9800 0%, #2196F3 100%);
+  color: #222;
+}
+button#minus {
+  background: linear-gradient(270deg, #FF9800 0%, #2196F3 100%);
+  color: #222;
+}
+
+button#multiply {
+  background: linear-gradient(356deg, #e91e63c7 0%, #00bcd494 100%);
+  color: #222;
+}
+
+button#start {
+  background: linear-gradient(134deg, #13dc6fc7 0%, #449be1 100%);
+  color: #222;
+}
+
+
 button#lett{
   background: linear-gradient(90deg, #dc64f0 0%, #5cb7ff 100%);
   color: #222;
 }
 
-button#Middels {background: linear-gradient(90deg, #5cb7ff 0%, #e1ee60 100%);
-color: #222;
+button#Middels {
+  background: linear-gradient(90deg, #5cb7ff 0%, #e1ee60 100%);
+  color: #222;
 }
 button#Vanskelig{
   background: linear-gradient(90deg, #e1ee60 0%, #E91E63 100%);
@@ -207,8 +259,6 @@ button#avsluttSpill:hover {
   color: var(--score-color);
 }
 
-
-
 .modal-button {
   margin-top: 20px;
   font-size: 18px;
@@ -261,8 +311,6 @@ button#avsluttSpill:hover {
     padding: 10px 0 18px 0;
     font-size: 18px;
   }
-
-
 
   input {
     font-size: 18px;
