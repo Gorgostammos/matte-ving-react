@@ -38,7 +38,7 @@ function getSavedHighscore() {
   return Number(localStorage.getItem("matteVingHighscore")) || 0;
 }
 
-export default function Quiz({ difficulty }) {
+export default function Quiz({ difficulty, operation }) {
   const navigate = useNavigate();
 
   const [poeng, setPoeng] = useState(0);
@@ -67,7 +67,7 @@ export default function Quiz({ difficulty }) {
   useEffect(() => {
     setOppgaver(getInitialTasks());
     // eslint-disable-next-line
-  }, [difficulty]);
+  }, [difficulty, operation]);
 
   function toggleTheme() {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
@@ -84,48 +84,36 @@ export default function Quiz({ difficulty }) {
     return Math.floor(Math.random() * 10) + 1;
   }
 
+  // Denne funksjonen er OPPDATERT til å bruke operation-prop!
   function getInitialTasks() {
-    const t1 = genererTall(),
-      t2 = genererTall();
-    const t3 = genererTall(),
-      t4 = genererTall();
-    const t5 = genererTall(),
-      t6 = genererTall();
-    const t7 = genererTall(),
-      t8 = genererTall();
-
-    return [
-      {
-        tekst: `Hva er ${t1} + ${t2}?`,
-        fasit: t1 + t2,
-        inputId: "brukerSvar",
-        tilbakemeldingId: "tilbakemelding",
-      },
-      {
-        tekst: `Hva er ${t3} x ${t4}?`,
-        fasit: t3 * t4,
-        inputId: "brukerSvar1",
-        tilbakemeldingId: "tilbakemelding1",
-      },
-      {
-        tekst: `Hva er ${t5} - ${t6}?`,
-        fasit: t5 - t6,
-        inputId: "brukerSvar2",
-        tilbakemeldingId: "tilbakemelding2",
-      },
-      {
-        tekst: `Hva er ${t7} + ${t8} + ${t2}?`,
-        fasit: t7 + t8 + t2,
-        inputId: "brukerSvar3",
-        tilbakemeldingId: "tilbakemelding3",
-      },
-      {
-        tekst: `Hva er ${t1} + ${t4} - ${t6}?`,
-        fasit: t1 + t4 - t6,
-        inputId: "brukerSvar4",
-        tilbakemeldingId: "tilbakemelding4",
-      },
-    ];
+    const tasks = [];
+    for (let i = 0; i < 5; i++) {
+      const t1 = genererTall();
+      const t2 = genererTall();
+      let tekst, fasit;
+      let op = operation;
+      if (operation === "mix") {
+        const rand = Math.floor(Math.random() * 3);
+        op = ["plus", "minus", "multiply"][rand];
+      }
+      if (op === "plus") {
+        tekst = `Hva er ${t1} + ${t2}?`;
+        fasit = t1 + t2;
+      } else if (op === "minus") {
+        tekst = `Hva er ${t1} - ${t2}?`;
+        fasit = t1 - t2;
+      } else if (op === "multiply") {
+        tekst = `Hva er ${t1} x ${t2}?`;
+        fasit = t1 * t2;
+      }
+      tasks.push({
+        tekst,
+        fasit,
+        inputId: `brukerSvar${i}`,
+        tilbakemeldingId: `tilbakemelding${i}`,
+      });
+    }
+    return tasks;
   }
 
   function streakPoeng(nyPoeng, prevPoeng = lastCelebrated) {

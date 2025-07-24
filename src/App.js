@@ -5,13 +5,26 @@ import Quiz from "./Quiz";
 
 export default function App() {
   const [difficulty, setDifficulty] = useState("lett");
-  // Du kan legge global state her hvis det trengs i fremtiden
+  const [operation, setOperation] = useState("mix"); // Ny state for operasjon!
 
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home onStart={setDifficulty} />} />
-        <Route path="/spill" element={<Quiz difficulty={difficulty} />} />
+        <Route
+          path="/"
+          element={
+            <Home
+              onStart={(d, o) => {
+                setDifficulty(d);
+                setOperation(o);
+              }}
+            />
+          }
+        />
+        <Route
+          path="/spill"
+          element={<Quiz difficulty={difficulty} operation={operation} />}
+        />
       </Routes>
     </Router>
   );
