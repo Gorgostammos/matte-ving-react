@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./App.css";
 
 export default function FloatingChatbot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -74,7 +75,7 @@ export default function FloatingChatbot() {
           }}
         >
           <div style={{ padding: 10, borderBottom: "1px solid #ccc", fontWeight: "bold" }}>
-            🤖 MatteBot
+            🤖 Jermy
             <button
               onClick={toggleChat}
               style={{
@@ -99,7 +100,10 @@ export default function FloatingChatbot() {
           >
             {history.map((msg, i) => (
               <div key={i} style={{ textAlign: msg.sender === "user" ? "right" : "left" }}>
-                <p style={{ margin: "6px 0" }}>
+                <p
+                  className={msg.sender === "user" ? "user-msg" : "bot-msg"}
+                  style={{ margin: "6px 0" }}
+                >
                   <strong>{msg.sender === "user" ? "Du" : "Bot"}:</strong> {msg.text}
                 </p>
               </div>
