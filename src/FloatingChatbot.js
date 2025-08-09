@@ -17,12 +17,12 @@ export default function FloatingChatbot() {
   );
   const scrollRef = useRef(null);
 
-  // Følg med på data-theme endringer
+  // Følg med på data-theme endringer (så knapper og farger matcher appens tema)
   useEffect(() => {
     const target = document.documentElement;
     const obs = new MutationObserver(() => {
       const t = target.getAttribute("data-theme") || "light";
-      setTheme(t); // trigger re-render for å bruke riktige CSS-vars
+      setTheme(t);
     });
     obs.observe(target, { attributes: true, attributeFilter: ["data-theme"] });
     return () => obs.disconnect();
@@ -31,29 +31,41 @@ export default function FloatingChatbot() {
   const toggleChat = () => setIsOpen((v) => !v);
 
   useEffect(() => {
-    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
   }, [history, isOpen]);
 
   const sendMessage = async () => {
     const trimmed = input.trim();
     if (!trimmed || loading) return;
-    setHistory((p) => [...p, { sender: "user", text: trimmed }]);
+
+    setHistory((prev) => [...prev, { sender: "user", text: trimmed }]);
     setInput("");
     setErrorMsg("");
     setLoading(true);
+
     try {
       const res = await fetch(`${API_BASE}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: trimmed, last_input: lastInput }),
       });
-      if (!res.ok) throw new Error(await res.text());
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || `HTTP ${res.status}`);
+      }
+
       const data = await res.json();
-      setHistory((p) => [...p, { sender: "bot", text: data.response ?? "🤖 (tomt svar)" }]);
+      setHistory((prev) => [...prev, { sender: "bot", text: data.response ?? "🤖 (tomt svar)" }]);
       setLastInput(trimmed);
-    } catch (e) {
-      setHistory((p) => [...p, { sender: "bot", text: "Klarte ikke å kontakte serveren 😢" }]);
-      setErrorMsg(e?.message || "Ukjent feil");
+    } catch (err) {
+      setHistory((prev) => [
+        ...prev,
+        { sender: "bot", text: "Klarte ikke å kontakte serveren 😢" },
+      ]);
+      setErrorMsg(err?.message || "Ukjent feil");
     } finally {
       setLoading(false);
     }
@@ -68,23 +80,18 @@ export default function FloatingChatbot() {
 
   return (
     <div>
-      {/* Flytende knapp */}
+      {/* Flytende knapp (premium) */}
       <button
         onClick={toggleChat}
         aria-label={isOpen ? "Lukk chatbot" : "Åpne chatbot"}
-        style={{
-          position: "fixed",
-          bottom: "20px",
-          right: "20px",
-          padding: "15px 20px",
-          borderRadius: "50%",
-          backgroundColor: "var(--primary)",
-          color: "var(--surface)",
-          border: "none",
-          fontSize: 18,
-          cursor: "pointer",
-          zIndex: 999,
-          boxShadow: "var(--shadow)",
+        className="chatbot-fab"
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = "scale(1.08)";
+          e.currentTarget.style.boxShadow = "0 10px 22px rgba(0, 0, 0, 0.32)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = "scale(1)";
+          e.currentTarget.style.boxShadow = "0 8px 18px rgba(0, 0, 0, 0.28)";
         }}
       >
         💬
@@ -104,25 +111,30 @@ export default function FloatingChatbot() {
             backgroundColor: "var(--surface)",
             color: "var(--text)",
             border: "1px solid var(--border)",
-            borderRadius: "10px",
+            borderRadius: "14px",
             boxShadow: "var(--shadow)",
             display: "flex",
             flexDirection: "column",
             zIndex: 999,
+            overflow: "hidden",
           }}
         >
-          <div style={{ padding: 10, borderBottom: "1px solid var(--border)", fontWeight: "bold" }}>
-            🤖 Jermy
+          <div
+            style={{
+              padding: 12,
+              borderBottom: "1px solid var(--border)",
+              fontWeight: "600",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              background:
+                "linear-gradient(180deg, rgba(0,0,0,0.03), rgba(0,0,0,0))",
+            }}
+          >
+            <span>🤖 Jermy</span>
             <button
               onClick={toggleChat}
-              style={{
-                float: "right",
-                background: "none",
-                border: "none",
-                fontSize: "16px",
-                cursor: "pointer",
-                color: "var(--text)",
-              }}
+              className="chatbot-icon-btn"
               aria-label="Lukk"
               title="Lukk"
             >
@@ -147,8 +159,8 @@ export default function FloatingChatbot() {
                   style={{
                     margin: "6px 0",
                     display: "inline-block",
-                    padding: "6px 10px",
-                    borderRadius: 8,
+                    padding: "8px 12px",
+                    borderRadius: 10,
                     background: msg.sender === "user" ? "var(--bubble-user)" : "var(--bubble-bot)",
                     border: "1px solid var(--border)",
                     maxWidth: "85%",
@@ -173,7 +185,15 @@ export default function FloatingChatbot() {
             )}
           </div>
 
-          <div style={{ display: "flex", padding: 10, borderTop: "1px solid var(--border)", gap: 6 }}>
+          <div
+            style={{
+              display: "flex",
+              padding: 10,
+              borderTop: "1px solid var(--border)",
+              gap: 8,
+              backgroundColor: "var(--surface)",
+            }}
+          >
             <textarea
               rows={2}
               value={input}
@@ -182,29 +202,24 @@ export default function FloatingChatbot() {
               placeholder="Skriv en melding… (Enter for å sende, Shift+Enter for linjeskift)"
               style={{
                 flex: 1,
-                padding: 8,
-                borderRadius: 5,
+                padding: 10,
+                borderRadius: 10,
                 border: "1px solid var(--border)",
                 fontSize: 14,
                 resize: "none",
                 background: "var(--surface)",
                 color: "var(--text)",
+                outline: "none",
+                boxShadow: "inset 0 1px 3px rgba(0,0,0,0.06)",
               }}
             />
             <button
               onClick={sendMessage}
               disabled={loading || !input.trim()}
-              style={{
-                padding: "8px 12px",
-                borderRadius: 5,
-                backgroundColor: loading ? "var(--primary-weak)" : "var(--primary)",
-                color: "var(--surface)",
-                border: "none",
-                cursor: loading ? "not-allowed" : "pointer",
-                minWidth: 70,
-              }}
+              className="chatbot-btn"
+              style={{ minWidth: 88, fontWeight: 600 }}
             >
-              {loading ? "Sender..." : "Send"}
+              {loading ? "Sender…" : "Send"}
             </button>
           </div>
         </div>

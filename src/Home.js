@@ -1,8 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import ThemeToggleSwitch from "./ThemeToggleSwitch";
+import "./theme.css"; // sørger for at CSS-variabler lastes også på Home
 
 export default function Home({ onStart }) {
   const navigate = useNavigate();
+
+  // Tema – samme oppsett som i Quiz
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+  function toggleTheme() {
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  }
+
+  // Eksisterende state
   const [selectedDifficulty, setSelectedDifficulty] = useState("lett");
   const [selectedOperation, setSelectedOperation] = useState("mix");
 
@@ -13,7 +27,11 @@ export default function Home({ onStart }) {
 
   return (
     <div className="startpage-wrapper">
-      <h1>Velkommen til Matteving!</h1>
+      <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <h1>Velkommen til Matteving!</h1>
+        <ThemeToggleSwitch theme={theme} toggleTheme={toggleTheme} />
+      </header>
+
       <h2>Velg vanskelighetsgrad:</h2>
       <div className="difficulty-buttons">
         <button

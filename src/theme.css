@@ -28,6 +28,25 @@
     background-color: var(--background-color);
     color: var(--text-color);
   }
+
+
+    /* Home page specific */
+    .startpage-wrapper {
+      background-color: var(--background-color);
+      color: var(--text-color);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+  
+    .startpage-wrapper h1,
+    .startpage-wrapper h2,
+    .startpage-wrapper p {
+      color: var(--text-color);
+    }
+  
+    /* Sørg for at knappeteksten også følger temaet */
+    .startpage-wrapper button {
+      color: var(--text-color);
+    }
   
   article#main,
   article.oppgaver,
@@ -124,3 +143,6 @@
   --bubble-user: #1f2a3d;
   --bubble-bot: #181818;
 }
+
+
+
