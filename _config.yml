@@ -1,0 +1,9 @@
+﻿exclude:
+  - venv
+  - .venv
+  - node_modules
+  - bin
+  - Scripts
+  - Lib
+  - Include
+  - pyvenv.cfg
