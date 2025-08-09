@@ -2,8 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import "./App.css";
 import "./theme.css";
 
-const API_BASE =
-  import.meta?.env?.VITE_API_BASE_URL?.replace(/\/+$/, "") || "http://127.0.0.1:5000";
+// CRA (Create React App): miljøvariabler må starte med REACT_APP_
+// Sett i .env.local (dev) eller .env.production (prod):
+// REACT_APP_API_BASE_URL=https://matte-ving-react.onrender.com
+const API_BASE = (process.env.REACT_APP_API_BASE_URL || "").replace(/\/+$/, "");
 
 export default function FloatingChatbot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,7 +19,7 @@ export default function FloatingChatbot() {
   );
   const scrollRef = useRef(null);
 
-  // Følg med på data-theme endringer (så knapper og farger matcher appens tema)
+  // Følg data-theme endringer
   useEffect(() => {
     const target = document.documentElement;
     const obs = new MutationObserver(() => {
@@ -30,6 +32,7 @@ export default function FloatingChatbot() {
 
   const toggleChat = () => setIsOpen((v) => !v);
 
+  // Autoscroll ved nye meldinger
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -46,24 +49,28 @@ export default function FloatingChatbot() {
     setLoading(true);
 
     try {
-      const res = await fetch(`${API_BASE}/api/chat`, {
+      // Hvis API_BASE === "" bruker vi dev-proxy (package.json "proxy")
+      const response = await fetch(`${API_BASE}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: trimmed, last_input: lastInput }),
+        body: JSON.stringify({ message: trimmed, last_input: lastInput })
       });
 
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || `HTTP ${res.status}`);
+      if (!response.ok) {
+        const text = await response.text().catch(() => "");
+        throw new Error(text || `HTTP ${response.status}`);
       }
 
-      const data = await res.json();
-      setHistory((prev) => [...prev, { sender: "bot", text: data.response ?? "🤖 (tomt svar)" }]);
+      const data = await response.json();
+      setHistory((prev) => [
+        ...prev,
+        { sender: "bot", text: data?.response ?? "🤖 (tomt svar)" }
+      ]);
       setLastInput(trimmed);
     } catch (err) {
       setHistory((prev) => [
         ...prev,
-        { sender: "bot", text: "Klarte ikke å kontakte serveren 😢" },
+        { sender: "bot", text: "Klarte ikke å kontakte serveren 😢" }
       ]);
       setErrorMsg(err?.message || "Ukjent feil");
     } finally {
@@ -80,7 +87,7 @@ export default function FloatingChatbot() {
 
   return (
     <div>
-      {/* Flytende knapp (premium) */}
+      {/* Flytende knapp */}
       <button
         onClick={toggleChat}
         aria-label={isOpen ? "Lukk chatbot" : "Åpne chatbot"}

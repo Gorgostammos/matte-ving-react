@@ -12,14 +12,12 @@ _env_origins = os.getenv("ALLOWED_ORIGINS")
 if _env_origins:
     ALLOWED_ORIGINS = [o.strip() for o in _env_origins.split(",") if o.strip()]
 else:
-    ALLOWED_ORIGINS = [
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "http://localhost:3005",
-        "http://127.0.0.1:3005",
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-    ]
+   ALLOWED_ORIGINS = [
+    "https://matte-ving-react.onrender.com",   # backendens egen URL (ok)
+    "https://<ditt-frontend-domene>",          # legg til når frontenden er deployet
+    "http://localhost:3000", "http://127.0.0.1:3000"  # valgfritt for lokal testing
+]
+
 
 CORS(app, resources={r"/api/*": {
     "origins": ALLOWED_ORIGINS or "*",
