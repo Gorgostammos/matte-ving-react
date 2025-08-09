@@ -6,24 +6,29 @@ from chatbot import get_response, load_responses, save_responses
 app = Flask(__name__)
 
 # --- CORS ---
-# Bruk miljøvariabel ALLOWED_ORIGINS for prod (kommaseparert),
-# fall tilbake til vanlige lokale porter i dev.
+# Prod: sett ALLOWED_ORIGINS i Render (kommaseparert, f.eks. "https://din-app.vercel.app,https://matte-ving-react.onrender.com")
 _env_origins = os.getenv("ALLOWED_ORIGINS")
 if _env_origins:
     ALLOWED_ORIGINS = [o.strip() for o in _env_origins.split(",") if o.strip()]
 else:
-   ALLOWED_ORIGINS = [
-    "https://matte-ving-react.onrender.com",   # backendens egen URL (ok)
-    "https://<ditt-frontend-domene>",          # legg til når frontenden er deployet
-    "http://localhost:3000", "http://127.0.0.1:3000"  # valgfritt for lokal testing
-]
+    # Default for dev + Vercel prod/preview + backendens egen URL på Render
+    ALLOWED_ORIGINS = [
+        r"https?://localhost(:\d+)?",
+        r"https?://127\.0\.0\.1(:\d+)?",
+        r"https://.*\.vercel\.app",
+        "https://matte-ving-react.onrender.com",
+    ]
 
-
-CORS(app, resources={r"/api/*": {
-    "origins": ALLOWED_ORIGINS or "*",
-    "methods": ["POST", "OPTIONS"],
-    "allow_headers": ["Content-Type"]
-}})
+CORS(
+    app,
+    resources={
+        r"/api/*": {
+            "origins": ALLOWED_ORIGINS,
+            "methods": ["POST", "OPTIONS"],
+            "allow_headers": ["Content-Type"],
+        }
+    },
+)
 
 # --- State ---
 responses = load_responses()
@@ -60,5 +65,4 @@ if __name__ == "__main__":
     # Render setter PORT i miljøvariabler. Lokalt faller vi tilbake til 5000.
     port = int(os.getenv("PORT", 5000))
     debug = os.getenv("FLASK_DEBUG", "").lower() in ("1", "true", "yes")
-    # Bind til 0.0.0.0 for å akseptere trafikk fra Render / containere
     app.run(host="0.0.0.0", port=port, debug=debug)
