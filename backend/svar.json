@@ -1,0 +1,14 @@
+{
+    "greeting": [
+        "Hei! Hvordan kan jeg hjelpe deg?",
+        "Hallo! Hva kan jeg bistå med?"
+    ],
+    "jokes": [
+        "Hva sa null til åtte? – Fin belte! 😄",
+        "Hva kaller man en fisk uten øyne? – Fsk 🐟"
+    ],
+    "hei": "Hei! Hvordan kan jeg hjelpe deg?",
+    "hei på deg": "Hei, hei! 😊 Hva trenger du hjelp med?",
+    "hallo": "Hallo der! Hva kan jeg bistå med?",
+    "god morgen": "God morgen! Håper du får en fin dag!"
+}

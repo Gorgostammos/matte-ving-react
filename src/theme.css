@@ -28,6 +28,25 @@
     background-color: var(--background-color);
     color: var(--text-color);
   }
+
+
+    /* Home page specific */
+    .startpage-wrapper {
+      background-color: var(--background-color);
+      color: var(--text-color);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+  
+    .startpage-wrapper h1,
+    .startpage-wrapper h2,
+    .startpage-wrapper p {
+      color: var(--text-color);
+    }
+  
+    /* Sørg for at knappeteksten også følger temaet */
+    .startpage-wrapper button {
+      color: var(--text-color);
+    }
   
   article#main,
   article.oppgaver,
@@ -96,4 +115,34 @@
     transition: background-color 0.3s ease, color 0.3s ease;
   }
   
-  
+  /* theme.css */
+:root[data-theme="light"] {
+  --surface: #ffffff;
+  --surface-2: #f9f9f9;
+  --text: #111111;
+  --muted: #666666;
+  --border: #d9d9d9;
+  --shadow: 0 4px 12px rgba(0,0,0,0.15);
+
+  --primary: #007bff;
+  --primary-weak: #7aaef7;
+  --bubble-user: #e8f0ff;
+  --bubble-bot: #ffffff;
+}
+
+:root[data-theme="dark"] {
+  --surface: #121212;
+  --surface-2: #1a1a1a;
+  --text: #eaeaea;
+  --muted: #b3b3b3;
+  --border: #2a2a2a;
+  --shadow: 0 6px 16px rgba(0,0,0,0.5);
+
+  --primary: #4c8dff;
+  --primary-weak: #3b6ed6;
+  --bubble-user: #1f2a3d;
+  --bubble-bot: #181818;
+}
+
+
+
