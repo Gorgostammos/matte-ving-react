@@ -1,21 +1,17 @@
+/* --- Toggle: bedre plassering og skalering --- */
 .toggle-switch-wrapper {
   display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 18px;
-  justify-content: flex-end;
-}
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+    justify-content: flex-end;
+    }
+    
 .toggle-label {
-  color: #313145;
-  font-size: 1.3rem;
-  font-family: inherit;
-  font-weight: 700;
-  background: rgba(255,255,255,0.7);
-  border-radius: 9px;
-  padding: 3px 10px 3px 10px;
-  letter-spacing: 1px;
-  transition: color 0.22s, background 0.22s;
-  user-select: none;
+  font-size: 1.05rem;
+  letter-spacing: .5px;
+  padding: 4px 10px;
+  border-radius: 10px;
 }
 .toggle-label.active {
   background: #ffe06b;
@@ -105,29 +101,43 @@ input:checked + .slider .icon {
   color: #ffe06b;
   background: #333;
 }
-@media only screen and (max-width: 600px) {
+/* Justér toggle på mobil: sentrer, ingen overlap */
+@media (max-width: 600px) {
   .toggle-switch-wrapper {
-    justify-content: center;    /* Sentrer på små skjermer */
-    margin-bottom: 6px;
-    gap: 7px;
-    scale: 0.98;                /* Kan evt. skaleres litt ned */
+    gap: 6px;
   }
+
   .toggle-label {
-    font-size: 1rem;
-    padding: 2px 7px 2px 7px;
+    font-size: .9rem;
+    padding: 2px 8px;
+    border-radius: 8px;
   }
+
   .switch {
-    width: 55px;
-    height: 33px;
+    width: 60px;
+    height: 36px;
   }
+
   .slider .icon {
-    width: 22px;
-    height: 22px;
-    font-size: 1.15rem;
-    top: 5px;
-    left: 5px;
+    width: 24px;
+    height: 24px;
+    top: 6px;
+    left: 6px;
   }
-  input:checked + .slider .icon {
-    left: 26px;
+
+  input:checked+.slider .icon {
+    left: 30px;
   }
 }
+
+/* Veldig små skjermer: skjul tekst, vis kun selve bryteren */
+@media (max-width: 430px) {
+  .toggle-label {
+    display: none;
+  }
+
+  .toggle-switch-wrapper {
+    gap: 0;
+  }
+}
+

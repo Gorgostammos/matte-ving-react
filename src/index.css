@@ -7,7 +7,18 @@ body {
   font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
   padding: 0 3vw;
 }
+/* Bedre bokser og mobil-zoom */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
+html,
+body {
+  height: 100%;
+  -webkit-text-size-adjust: 100%;
+}
 /* Topptekst – poengscore */
 h1#Poeng {
   display: block;
@@ -60,30 +71,28 @@ input[type=number] {
 }
 
 /* === Mobilrespons === */
-@media only screen and (max-width: 600px) {
+/* --- Mobil topp & safe-areas --- */
+@media (max-width: 600px) {
   body {
-    font-size: 18px;
-    padding: 0;
-    margin-top: 0;
-    background: #f8f9fb;
-  }
-
-  #root {
-    width: 100vw;
-    min-height: 100vh;
     margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
+    padding:
+      env(safe-area-inset-top) calc(env(safe-area-inset-right) + 8px) env(safe-area-inset-bottom) calc(env(safe-area-inset-left) + 8px);
   }
 
+  /* Poeng-banner uten fast bredde + fleksibel font */
   h1#Poeng {
-    width: 94vw;
-    max-width: 99vw;
-    font-size: 20px;
-    padding: 12px 0;
-    margin: 8px auto 14px auto;
-    border-radius: 13px;
-    box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+    width: 100%;
+    max-width: 100%;
+    font-size: clamp(16px, 5vw, 22px);
+    letter-spacing: 1px;
+    margin: 10px 0 12px 0;
+  }
+
+  h3 {
+    font-size: clamp(18px, 5.4vw, 22px);
+  }
+
+  p {
+    font-size: clamp(16px, 4.8vw, 20px);
   }
 }

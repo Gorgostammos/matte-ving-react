@@ -389,56 +389,104 @@ button#avsluttSpill:hover {
   filter: brightness(1.05);
 }
 
-@media only screen and (max-width: 600px) {
+/* --- Mobil-layout forbedringer --- */
+/* --- Mobil-layout forbedringer --- */
+@media (max-width: 600px) {
+
   article#main {
-    width: 98vw;
-    max-width: 98vw;
-    margin-top: 6px;
-    margin-bottom: 10px;
+    width: 100%;
+    margin: 6px 0 10px 0;
     border-radius: 12px;
-    padding-bottom: 8px;
-    box-shadow: 0 2px 10px rgba(44, 62, 80, 0.06);
     border: 1px solid #eaeaea;
-    background: #fff;
+    box-shadow: 0 2px 10px rgba(44, 62, 80, .06);
+    overflow: hidden;
+    /* hindrer rar horisontal scroll */
   }
 
+  /* Oppgavelinje strammere spacing og skalerbar tekst */
   article.oppgaver {
-    flex-direction: column;
-    align-items: center;
-    width: 92vw;
-    margin: 8px auto;
-    gap: 10px;
-    padding: 10px 0 18px 0;
-    font-size: 18px;
+    width: 100%;
+    padding: 12px 10px 16px 10px;
+    gap: 8px;
+    font-size: clamp(18px, 6vw, 22px);
+    background: #f7f9fc;
+    border-radius: 0;
   }
 
+  /* Inputs: full bredde (med max) og litt nedskalert */
   input {
-    font-size: 18px;
-    width: 70vw;
-    max-width: 150px;
+    width: 100%;
+    max-width: 220px;
     height: 42px;
-    margin: 3px 0 7px 0;
-    border-radius: 9px;
-    padding: 0 10px;
-    border: 1.2px solid #bcdfff;
+    font-size: 18px;
   }
 
+  /* Knappecontainere: kolonne + tett */
   section#knapper {
     flex-direction: column;
-    gap: 8px;
-    margin-top: 8px;
-    margin-bottom: 8px;
-    width: 96vw;
+    align-items: stretch;
+    gap: 10px;
+    width: 100%;
+    padding: 0 8px;
+    margin: 10px 0;
   }
 
+  /* Grid for valg-knapper: 2 i bredden, auto-wrap */
+  .difficulty-buttons,
+  .operation-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding: 0 8px 12px 8px;
+    width: 100%;
+  }
+
+  /* Standard knapp: full bredde i containere */
   button#sjekkSvar,
   button#avsluttSpill,
+  button#tilbakeTilForside,
+  button#start,
   .restart-button {
-    font-size: 19px;
-    padding: 12px 0;
-    min-width: 94vw;
+    width: 100%;
+    min-width: 0;
     min-height: 44px;
+    font-size: 18px;
+    padding: 12px 14px;
     border-radius: 10px;
-    margin-bottom: 6px;
+  }
+
+  /* Valgknapper (pluss/minus/difficulty): del av grid */
+  #plus,
+  #minus,
+  #multiply,
+  #mix,
+  #lett,
+  #Middels,
+  #Vanskelig {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    font-size: 18px;
+    padding: 12px 10px;
+  }
+
+  /* Unngå “hopp” ved focus på mobil (ingen scale) */
+  button.active,
+  button:focus-visible {
+    transform: none;
+    outline-width: 2px;
+    box-shadow: 0 0 0 2px #b4fc7e44;
+    filter: none;
+  }
+
+  /* Hjerter/score tett oppsett */
+  .hearts-wrapper {
+    font-size: 1.5rem;
+    margin: 8px;
+  }
+
+  .highscore {
+    font-size: 1.4rem;
+    margin: 0 0 10px 0;
   }
 }
