@@ -2,6 +2,7 @@
   "name": "matte-ving-react",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:5000",
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
@@ -16,8 +17,14 @@
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
+  "devDependencies": {
+    "concurrently": "^9.0.1",
+    "cross-env": "^7.0.3"
+  },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "concurrently -k -n REACT,API -c auto \"npm:react\" \"npm:api\"",
+    "react": "react-scripts start",
+    "api": "cd backend && cross-env FLASK_APP=server.py FLASK_ENV=development py -m flask run --host=127.0.0.1 --port=5000",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
