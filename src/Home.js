@@ -28,7 +28,7 @@ export default function Home({ onStart }) {
   return (
     <div className="startpage-wrapper">
       <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h1>Velkommen til Matteving!</h1>
+        <h1 id="Velkommen">Velkommen til Matteving!</h1>
         <ThemeToggleSwitch theme={theme} toggleTheme={toggleTheme} />
       </header>
 
