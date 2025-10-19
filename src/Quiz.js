@@ -105,6 +105,9 @@ export default function Quiz({ difficulty, operation }) {
       } else if (op === "multiply") {
         tekst = `Hva er ${t1} x ${t2}?`;
         fasit = t1 * t2;
+      } else if (op === "division") {
+        tekst = `Hva er ${t1} / ${t2}?`;
+        fasit = t1 * t2;
       }
       tasks.push({
         tekst,

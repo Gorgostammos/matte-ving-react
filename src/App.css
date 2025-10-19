@@ -99,6 +99,7 @@ button#Vanskelig,
 button#multiply,
 button#minus,
 button#plus,
+button#division,
 button#mix,
 button#start {
   font-size: 28px;
@@ -156,6 +157,11 @@ button#minus {
 
 button#multiply {
   background: linear-gradient(356deg, #e91e63c7 0%, #00bcd494 100%);
+  color: #222;
+}
+
+button#division {
+  background: linear-gradient(116deg, #350ee0c7 0%, #09ff2a94 100%);
   color: #222;
 }
 

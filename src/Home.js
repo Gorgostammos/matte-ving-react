@@ -87,7 +87,29 @@ export default function Home({ onStart }) {
         >
           Gange
         </button>
+
+
+        <button
+          id="division"
+          className={selectedOperation === "division" ? "active" : ""}
+          onClick={() => setSelectedOperation("division")}
+        >
+          Dele
+        </button>
+
+
+
+
+
+
+
+
+
+
+
+
       </div>
+
 
       <button id="start" className="start-button" onClick={handleStart}>
         Start

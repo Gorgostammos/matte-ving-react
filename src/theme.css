@@ -59,7 +59,7 @@
   p#oppgave4,
   .modal-title,
   .modal-subtitle,
-  .modal-score, p#tilbakemelding, 
+  .modal-score, p#tilbakemelding, #tilbakemelding0,
   #tilbakemelding1, #tilbakemelding2, #tilbakemelding3, 
   #tilbakemelding4,p#rundeTilbakemelding,
   p#sluttMelding,p.hurraMessage{
