@@ -1,33 +1,66 @@
 # Node
 node_modules/
+logs/
+*.log
 npm-debug.log*
-yarn.lock
-package-lock.json
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
-# Build
+# Lock files (commit ÉN av disse – fjern de du ikke bruker fra ignore)
+# Fjern kommentaren for den du faktisk vil ignorere; anbefaling: ikke ignorér noen av dem.
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# Build / tooling caches
 build/
 dist/
+.cache/
+.parcel-cache/
+.turbo/
+.next/
+out/
 
 # Python
 venv/
 .venv/
+env/
+ENV/
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+.python-version
 
-# Env/konfig
+# Env / config
 .env
 *.env
-# Frontend env (CRA)
+.env.*        # Fanger Vite/Cra-varianter osv.
+!.env.example # Behold eksempel-konfig i repo
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+.env.production   # Viktig hvis du har den varianten
+# Hvis du bruker Flask "instance" for secrets:
+instance/
 
-# OS/IDE
+# OS / IDE
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
+
+# Hosting/platform
+.vercel/
+.netlify/
 
 # Diverse
 svar_backup.json
