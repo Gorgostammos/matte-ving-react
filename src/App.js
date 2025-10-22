@@ -3,10 +3,12 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./Home";
 import Quiz from "./Quiz";
 import FloatingChatbot from "./FloatingChatbot"; // 👈
+import CashierGame from "./spille/CashierGame"; // 👈 NY
 
 export default function App() {
   const [difficulty, setDifficulty] = useState("lett");
   const [operation, setOperation] = useState("mix");
+  const[gameType, setGameType] = useState("quiz");
 
   return (
     <Router>
@@ -26,9 +28,12 @@ export default function App() {
           path="/spill"
           element={<Quiz difficulty={difficulty} operation={operation} />}
         />
+        <Route
+          path="/kasse"
+          element={<CashierGame />} // 👈 NY route
+        />
       </Routes>
 
-      {/* 👇 Legg chatboten som en "floating widget" */}
       <FloatingChatbot />
     </Router>
   );

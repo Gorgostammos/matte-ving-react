@@ -1,12 +1,13 @@
+// Home.js
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ThemeToggleSwitch from "./ThemeToggleSwitch";
-import "./theme.css"; // sørger for at CSS-variabler lastes også på Home
+import "./theme.css";
 
 export default function Home({ onStart }) {
   const navigate = useNavigate();
 
-  // Tema – samme oppsett som i Quiz
+  // Tema
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
@@ -20,9 +21,19 @@ export default function Home({ onStart }) {
   const [selectedDifficulty, setSelectedDifficulty] = useState("lett");
   const [selectedOperation, setSelectedOperation] = useState("mix");
 
+  // NY: Spilltype
+  const [selectedGameType, setSelectedGameType] = useState("quiz"); // "quiz" | "kasse"
+
   function handleStart() {
-    onStart(selectedDifficulty, selectedOperation);
-    navigate("/spill");
+    // Send alt opp til App
+    onStart(selectedDifficulty, selectedOperation, selectedGameType);
+
+    // Smart navigering
+    if (selectedGameType === "kasse") {
+      navigate("/kasse");
+    } else {
+      navigate("/spill");
+    }
   }
 
   return (
@@ -32,85 +43,95 @@ export default function Home({ onStart }) {
         <ThemeToggleSwitch theme={theme} toggleTheme={toggleTheme} />
       </header>
 
-      <h2>Velg vanskelighetsgrad:</h2>
-      <div className="difficulty-buttons">
+      {/* NY seksjon: velg spilltype */}
+      <h2>Velg spilltype:</h2>
+      <div className="game-type-buttons" style={{ display: "flex", gap: 8, marginBottom: 12 }}>
         <button
-          id="lett"
-          className={selectedDifficulty === "lett" ? "active" : ""}
-          onClick={() => setSelectedDifficulty("lett")}
+          id="quiz"
+          className={selectedGameType === "quiz" ? "active" : ""}
+          onClick={() => setSelectedGameType("quiz")}
         >
-          1-10
+          📚 Quiz
         </button>
         <button
-          id="Middels"
-          className={selectedDifficulty === "middels" ? "active" : ""}
-          onClick={() => setSelectedDifficulty("middels")}
+          id="kasse"
+          className={selectedGameType === "kasse" ? "active" : ""}
+          onClick={() => setSelectedGameType("kasse")}
         >
-          1-20
-        </button>
-        <button
-          id="Vanskelig"
-          className={selectedDifficulty === "vanskelig" ? "active" : ""}
-          onClick={() => setSelectedDifficulty("vanskelig")}
-        >
-          1-50
+          🧾 Kasse-spill
         </button>
       </div>
 
-      <h2>Velg operasjon:</h2>
-      <div className="operation-buttons">
-        <button
-          id="mix"
-          className={selectedOperation === "mix" ? "active" : ""}
-          onClick={() => setSelectedOperation("mix")}
-        >
-          Miks
-        </button>
-        <button
-          id="plus"
-          className={selectedOperation === "plus" ? "active" : ""}
-          onClick={() => setSelectedOperation("plus")}
-        >
-          Pluss
-        </button>
-        <button
-          id="minus"
-          className={selectedOperation === "minus" ? "active" : ""}
-          onClick={() => setSelectedOperation("minus")}
-        >
-          Minus
-        </button>
-        <button
-          id="multiply"
-          className={selectedOperation === "multiply" ? "active" : ""}
-          onClick={() => setSelectedOperation("multiply")}
-        >
-          Gange
-        </button>
+      {/* Vis vanskelighet og operasjon bare når Quiz er valgt */}
+      {selectedGameType === "quiz" && (
+        <>
+          <h2>Velg vanskelighetsgrad:</h2>
+          <div className="difficulty-buttons">
+            <button
+              id="lett"
+              className={selectedDifficulty === "lett" ? "active" : ""}
+              onClick={() => setSelectedDifficulty("lett")}
+            >
+              1-10
+            </button>
+            <button
+              id="Middels"
+              className={selectedDifficulty === "middels" ? "active" : ""}
+              onClick={() => setSelectedDifficulty("middels")}
+            >
+              1-20
+            </button>
+            <button
+              id="Vanskelig"
+              className={selectedDifficulty === "vanskelig" ? "active" : ""}
+              onClick={() => setSelectedDifficulty("vanskelig")}
+            >
+              1-50
+            </button>
+          </div>
 
+          <h2>Velg operasjon:</h2>
+          <div className="operation-buttons">
+            <button
+              id="mix"
+              className={selectedOperation === "mix" ? "active" : ""}
+              onClick={() => setSelectedOperation("mix")}
+            >
+              Miks
+            </button>
+            <button
+              id="plus"
+              className={selectedOperation === "plus" ? "active" : ""}
+              onClick={() => setSelectedOperation("plus")}
+            >
+              Pluss
+            </button>
+            <button
+              id="minus"
+              className={selectedOperation === "minus" ? "active" : ""}
+              onClick={() => setSelectedOperation("minus")}
+            >
+              Minus
+            </button>
+            <button
+              id="multiply"
+              className={selectedOperation === "multiply" ? "active" : ""}
+              onClick={() => setSelectedOperation("multiply")}
+            >
+              Gange
+            </button>
+            <button
+              id="division"
+              className={selectedOperation === "division" ? "active" : ""}
+              onClick={() => setSelectedOperation("division")}
+            >
+              Dele
+            </button>
+          </div>
+        </>
+      )}
 
-        <button
-          id="division"
-          className={selectedOperation === "division" ? "active" : ""}
-          onClick={() => setSelectedOperation("division")}
-        >
-          Dele
-        </button>
-
-
-
-
-
-
-
-
-
-
-
-
-      </div>
-
-
+      {/* Start-knapp */}
       <button id="start" className="start-button" onClick={handleStart}>
         Start
       </button>
