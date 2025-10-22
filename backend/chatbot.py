@@ -151,7 +151,9 @@ def handle_math(message: str):
                         result = a / b
                         return f"{a} / {b} = {result}. {a} godteri delt på {b} personer = {result:.2f} 🍬"
                 except Exception as e:
-                    return f"Utregningsfeil: {e}"
+                      # Optional: log or print the error here for debugging if needed
+                    # print(f"Utregningsfeil: {e}")  # Or use logging
+                    return "Beklager, det oppsto en feil i utregningen."
             return None
     return None
 
