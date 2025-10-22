@@ -49,6 +49,10 @@ def chat():
     message = (data.get("message") or "").strip()
     last_input = (data.get("last_input") or "").strip() or None
 
+    # Hard cap på lengde for å hindre regex-/parser-kost og ReDoS
+    if len(message) > 1000:
+        return jsonify({"error": "Meldingen er for lang (maks 1000 tegn)"}), 400
+
     if not message:
         return jsonify({"error": "Feltet 'message' er påkrevd"}), 400
 

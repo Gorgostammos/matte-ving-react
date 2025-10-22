@@ -1,7 +1,8 @@
 import json
 import os
-import re
 import random
+import re  # beholdes for enkel tokenisering i fallback
+from typing import List
 
 # Forsøk å laste norsk spaCy, fall tilbake til en enkel tokenizer
 try:
@@ -46,7 +47,8 @@ DEFAULT_CATEGORY_RESPONSES = {
 }
 
 def _normalize(text: str) -> str:
-    return re.sub(r"\s+", " ", (text or "").strip().lower())
+    # Ryddig, regex-fri normalisering (hindrer regex-backtracking helt)
+    return " ".join((text or "").lower().split())
 
 def load_responses():
     if os.path.exists(RESPONSES_FILE):
@@ -68,17 +70,17 @@ def save_responses(responses):
     with open(RESPONSES_FILE, "w", encoding="utf-8") as file:
         json.dump(responses, file, indent=4, ensure_ascii=False)
 
-def _simple_tokens(s: str):
-    # fallback tokenizer
+def _simple_tokens(s: str) -> List[str]:
+    # Fallback-tokenizer: beholdes, men inputlengden er allerede cap’et i API-laget.
     return [t for t in re.findall(r"\w+", s.lower(), flags=re.UNICODE) if t]
 
-def extract_keywords(message):
+def extract_keywords(message: str) -> List[str]:
     if nlp is None:
         return _simple_tokens(message)
     doc = nlp(message)
     return [t.lemma_.lower() for t in doc if not t.is_stop and not t.is_punct and t.lemma_.strip()]
 
-def match_category(message):
+def match_category(message: str):
     keywords = set(extract_keywords(message))
     for category, phrases in CATEGORIES.items():
         for phrase in phrases:
@@ -89,23 +91,23 @@ def match_category(message):
                 return category
     return None
 
-def detect_intent(message):
+def detect_intent(message: str):
     m = message.lower()
     if any(w in m for w in ["føler", "trist", "lei", "stressa", "nervøs"]):
         return "feelings"
     if "vits" in m:
         return "jokes"
-    if re.match(r"^(hva|hvordan|når|kan du)\b", m):
+    if m.startswith(("hva ", "hvordan ", "når ", "kan du")):
         return "question"
     return None
 
-def jaccard_similarity(a_tokens, b_tokens):
+def jaccard_similarity(a_tokens: List[str], b_tokens: List[str]) -> float:
     a, b = set(a_tokens), set(b_tokens)
     if not a and not b:
         return 0.0
     return len(a & b) / len(a | b)
 
-def better_match(message, known_messages, min_sim=0.45):
+def better_match(message: str, known_messages, min_sim=0.45):
     input_keywords = extract_keywords(message)
     best_match = None
     best_score = 0.0
@@ -117,32 +119,43 @@ def better_match(message, known_messages, min_sim=0.45):
             best_match = known
     return best_match if best_score >= min_sim else None
 
-def handle_math(message):
-    match = re.search(r"(\d+)\s*([+\-*/])\s*(\d+)", message)
-    if not match:
+def handle_math(message: str):
+    """
+    Regex-fri parser for enkle uttrykk: <int><op><int>, med valgfritt whitespace.
+    Støtter + - * /
+    """
+    s = (message or "").strip()
+    if not s:
         return None
-    a, operator, b = int(match[1]), match[2], int(match[3])
-    try:
-        if operator == '+':
-            result = a + b
-            return f"{a} + {b} = {result}. Hvis du har {a} epler og får {b} til, har du {result} 🍎"
-        elif operator == '-':
-            result = a - b
-            return f"{a} - {b} = {result}. Hvis du har {a} kjeks og spiser {b}, har du {result} 🍪"
-        elif operator == '*':
-            result = a * b
-            return f"{a} * {b} = {result}. {a} esker med {b} kuler blir {result} 🎯"
-        elif operator == '/':
-            if b == 0:
-                return "Du kan ikke dele på 0!"
-            result = a / b
-            return f"{a} / {b} = {result}. {a} godteri delt på {b} personer = {result:.2f} 🍬"
-    except Exception as e:
-        print(f"Utregningsfeil i handle_math: {e}")  # Log the error server-side
-        return "Beklager, en feil oppstod under utregningen."
+
+    # Finn første støttede operator og forsøk å splitte i to deler
+    for operator in "+-*/":
+        if operator in s:
+            left, right = s.split(operator, 1)
+            left, right = left.strip(), right.strip()
+            if left.isdigit() and right.isdigit():
+                a, b = int(left), int(right)
+                try:
+                    if operator == '+':
+                        result = a + b
+                        return f"{a} + {b} = {result}. Hvis du har {a} epler og får {b} til, har du {result} 🍎"
+                    if operator == '-':
+                        result = a - b
+                        return f"{a} - {b} = {result}. Hvis du har {a} kjeks og spiser {b}, har du {result} 🍪"
+                    if operator == '*':
+                        result = a * b
+                        return f"{a} * {b} = {result}. {a} esker med {b} kuler blir {result} 🎯"
+                    if operator == '/':
+                        if b == 0:
+                            return "Du kan ikke dele på 0!"
+                        result = a / b
+                        return f"{a} / {b} = {result}. {a} godteri delt på {b} personer = {result:.2f} 🍬"
+                except Exception as e:
+                    return f"Utregningsfeil: {e}"
+            return None
     return None
 
-def teach_mode(message, responses):
+def teach_mode(message: str, responses: dict):
     """
     Lær: hei på deg => Hei! Godt å se deg.
     eller
@@ -166,7 +179,7 @@ def teach_mode(message, responses):
     responses[_normalize(trigger)] = reply
     return f"Lagret! Når du sier «{trigger}», svarer jeg «{reply}»."
 
-def get_response(message, responses, last_input=None):
+def get_response(message: str, responses: dict, last_input: str | None = None):
     original = message
     message = _normalize(message)
     message = ALIASES.get(message, message)
