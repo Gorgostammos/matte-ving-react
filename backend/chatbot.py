@@ -138,7 +138,8 @@ def handle_math(message):
             result = a / b
             return f"{a} / {b} = {result}. {a} godteri delt på {b} personer = {result:.2f} 🍬"
     except Exception as e:
-        return f"Utregningsfeil: {e}"
+        print(f"Utregningsfeil i handle_math: {e}")  # Log the error server-side
+        return "Beklager, en feil oppstod under utregningen."
     return None
 
 def teach_mode(message, responses):
