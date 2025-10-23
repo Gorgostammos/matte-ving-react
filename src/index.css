@@ -78,6 +78,7 @@ input[type=number] {
     margin: 0;
     padding:
       env(safe-area-inset-top) calc(env(safe-area-inset-right) + 8px) env(safe-area-inset-bottom) calc(env(safe-area-inset-left) + 8px);
+      height: 115%;
   }
 
   /* Poeng-banner uten fast bredde + fleksibel font */
@@ -96,4 +97,6 @@ input[type=number] {
   p {
     font-size: clamp(16px, 4.8vw, 20px);
   }
+
+  
 }

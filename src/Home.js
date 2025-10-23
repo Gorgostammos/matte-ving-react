@@ -45,7 +45,7 @@ export default function Home({ onStart }) {
 
       {/* NY seksjon: velg spilltype */}
       <h2>Velg spilltype:</h2>
-      <div className="game-type-buttons" style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+      <div className="game-type-buttons">
         <button
           id="quiz"
           className={selectedGameType === "quiz" ? "active" : ""}
