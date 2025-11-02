@@ -1,0 +1,12 @@
+[
+  { "id": "brød", "name": "Brød", "price": 29 },
+  { "id": "melk", "name": "Melk 1L", "price": 21 },
+  { "id": "smør", "name": "Smør", "price": 39 },
+  { "id": "ost", "name": "Gulost 500g", "price": 79 },
+  { "id": "sjokolade", "name": "Sjokolade", "price": 25 },
+  { "id": "banan", "name": "Banan (stk)", "price": 6 },
+  { "id": "eple", "name": "Eple (stk)", "price": 7 },
+  { "id": "pasta", "name": "Pasta 500g", "price": 24 },
+  { "id": "ris", "name": "Ris 1kg", "price": 32 },
+  { "id": "egg", "name": "Egg 12pk", "price": 39 }
+]
